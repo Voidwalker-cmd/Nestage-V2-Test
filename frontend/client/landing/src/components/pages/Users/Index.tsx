@@ -31,8 +31,8 @@ const UserIndex  = () => {
                         </CardHeader>
                     </Card>
                 </div>
-                <div className="!grid !grid-cols-1 lg:!grid-cols-12 !gap-3 lg:!gap-5 !mt-2">
-                    <Card className="!border-0 !w-auto !col-span-2 lg:!col-span-3 !bg-transparent dark:!bg-inherit !shadow-none dark:!shadow">
+                <div className="!grid !grid-cols-6 lg:!grid-cols-12 !gap-3 lg:!gap-5 !mt-2">
+                    <Card className="!border-0 !w-auto !col-span-1 lg:!col-span-3 !bg-transparent dark:!bg-inherit !shadow-none dark:!shadow">
                         <CardHeader>
                             <CardDescription>Status</CardDescription>
                             <CardTitle>Active</CardTitle>
