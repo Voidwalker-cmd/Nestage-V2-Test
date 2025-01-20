@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 
-export default async function Layout({ children, levelOne, levelTwo }: { children: React.ReactNode, levelOne: React.ReactNode, levelTwo: ReactNode }) {
+export default async function Layout({ children, levelOne, levelTwo }: { children: React.ReactNode, levelOne: React.ReactNode, levelTwo: React.ReactNode }) {
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
 
