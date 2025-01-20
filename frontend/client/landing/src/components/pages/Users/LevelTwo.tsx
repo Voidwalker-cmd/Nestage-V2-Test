@@ -11,7 +11,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 
 const LevelTwo = () => {
-  const [loaded, setLoaded] = useState<boolean>(!!0)
+  const [loaded] = useState<boolean>(!!0)
   return (
     <div className="space-y-5">
         <h1 className="font-bold text-xl">Level Two</h1>
@@ -19,7 +19,7 @@ const LevelTwo = () => {
             {loaded ? (<Card className="!h-80 lg:!h-[500px]">
 
             </Card>) : (
-              <Skeleton className="w-full !h-80 lg:!h-[500px] rounded-lg z-[-1]" />
+              <Skeleton className="w-full !h-80 lg:!h-[500px] rounded-lg" />
             )}
         </div>
     </div>
