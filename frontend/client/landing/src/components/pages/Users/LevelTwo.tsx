@@ -19,7 +19,7 @@ const LevelTwo = () => {
             {loaded ? (<Card className="!h-80 lg:!h-[500px]">
 
             </Card>) : (
-              <Skeleton className="w-full !h-80 lg:!h-[500px] rounded-lg" />
+              <Skeleton className="w-full !h-80 lg:!h-[500px] rounded-lg -z-20" />
             )}
         </div>
     </div>
