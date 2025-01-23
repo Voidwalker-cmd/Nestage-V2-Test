@@ -1,4 +1,5 @@
 "use client"
+import { Axios } from "@/lib/Axios/client";
 import * as T from "../types";
 
 export const searchStringInArray = (
@@ -15,3 +16,8 @@ const url = window.location.protocol + "//" + window.location.hostname;
 const port = window.location.port ? `:${window.location.port}` : "";
 
 export const SiteUrl = `${url}${port}`;
+
+export const saveRef = async (ref: string) => {
+  const { data } = await Axios.get(`referral?ref=${ref}`)
+  return data
+}

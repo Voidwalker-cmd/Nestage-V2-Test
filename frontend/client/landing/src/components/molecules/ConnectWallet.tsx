@@ -39,7 +39,8 @@ const ConnectWallet = ({ state }: ConnectWalletProps) => {
     const address = useWeb3Store((state) => state.address);
 
     const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
-    const [isLoading, setisLoading] = useState(!!0);
+    const [isLoading, setIsLoading] = useState(!!0);
+    const [off, setOff] = useState(!!0);
     const [hasStake, setHasStake] = useState(!!0);
     const [hasRef, setHasRef] = useState(!!0);
     const [disabled, setDisabled] = useState(!!1);
@@ -54,15 +55,16 @@ const ConnectWallet = ({ state }: ConnectWalletProps) => {
 
     const Redirect = () => {
         if (hasStake || hasRef) {
-            router.push("/dashboard")
             setDisabled(!!0)
+            router.push(`/user/${address}`)
         } else {
             setDisabled(!!0)
         }
     }
     
     const Nav = () => {
-        setisLoading(!!1)
+        setOff(!!1)
+        setIsLoading(!!1)
         router.push("/connect-wallet")
     }
 
@@ -123,6 +125,7 @@ const ConnectWallet = ({ state }: ConnectWalletProps) => {
                         <Button
                             variant="default"
                             onClick={Nav}
+                            disabled={off}
                             className={`text-semibold rounded-full border border-gray-500 text-white font-semibold ${state === 'fill' ? "bg-[#06351C]" : "bg-transparent"} ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
                         >
                             {!isLoading ? "Register" : "Loading"}

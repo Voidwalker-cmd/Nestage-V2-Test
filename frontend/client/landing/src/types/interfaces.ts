@@ -1,3 +1,4 @@
+import { getAdminAddress } from "@/actions/newStake";
 import { BigNumberish } from "ethers";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
@@ -25,14 +26,14 @@ export interface web3Store {
   setAddress: (address: string) => void;
   setBalance: (balance: string) => void;
   setSymbol: (symbol: string) => void;
-};
+}
 
 export interface Web3ContextProps {
   children: ReactNode;
 }
 
 export interface ParsedStakersData {
-    staker: string;
+  staker: string;
   id?: number;
   uuid?: string;
   amount: string;
@@ -57,12 +58,13 @@ export interface MiningResult {
   message: string;
 }
 export interface refData {
-  referral: string;
+  referral?: string;
   amount: string;
+  address: string;
 }
 
 export interface ModalProps {
-    setStage: Dispatch<SetStateAction<number>>;
+  setStage: Dispatch<SetStateAction<number>>;
 }
 
 export interface DecimalOptions {
@@ -84,6 +86,7 @@ export interface StakingData {
   startDate: string;
   endDate: string;
   profit: string;
+  address: string;
 }
 
 export interface payUpline {
@@ -131,10 +134,47 @@ export interface getRefResponse {
 
 export interface getRefByCodeResponse
   extends Omit<getRefResponse, "downlines"> {
-    additionalProperty?: string;
-  }
+  additionalProperty?: string;
+}
 
 export interface AuthStore {
   isAuth: boolean;
   setIsAuth: (isAuth: boolean) => void;
+}
+
+export interface bscScan {
+  data: {
+    status: string;
+    message: string;
+    result: {
+      status: string;
+    };
+  };
+  status: number
+};
+
+
+export interface getAdminAddressResponse {
+  data: {
+    admin: {
+      id: number;
+      adminId: number;
+      type: string;
+      address: string;
+      active: boolean;
+    };
+    refAdmin: {
+      id: number;
+      adminId: number;
+      type: string;
+      address: string;
+      active: boolean;
+    };
+  };
+  status: number;
+} 
+
+export interface createRefParams {
+  address: string;
+  code?: string;
 }

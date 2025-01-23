@@ -5,56 +5,44 @@ import {
 } from "thirdweb/react";
 import { useEffect, useState } from 'react';
 import Preloader from "@/components/molecules/Loader";
-
-// import { useWeb3Store } from "@/store";
-// import { useRouter } from "next/navigation"
-
-// import {
-//   coinbaseWallet,
-//   metamaskWallet,
-//   okxWallet,
-//   trustWallet,
-//   walletConnect,
-// } from "thirdweb/wallet";
-
-// import { bsc, bscTestnet } from "thirdweb/chains";
-// import { CLIENT_ID, NETWORK_MODE } from "@/config";
+import { useSearchParams } from 'next/navigation'
+import { saveRef } from "@/functions";
+import { refKey } from "@/config";
 
 export default function Template({ children }: { children: React.ReactNode }) {
-  // const router = useRouter()
-  //     const address = useWeb3Store((state) => state.address);
-  //     if(!address) router.replace("/")
-
-
-  // const activeChainT = bscTestnet;
-  // const activeChainM = bsc;
-
 
   const [isClient, setIsClient] = useState(false);
 
+  const searchParams = useSearchParams()
+
+  const SaveRef = async (ref: string) => {
+    const { data, status } = await saveRef(ref)
+    if (status === 200) {
+      console.log({ data })
+      localStorage.setItem(refKey, data);
+    }
+  }
+
   useEffect(() => {
-    // Ensures this only runs on the client
+    const ref = searchParams.get('ref')
+
+    if (ref && isClient) {
+      console.log(ref)
+      SaveRef(ref as string);
+    }
+
+  }, [searchParams, isClient]);
+
+  useEffect(() => {
     setIsClient(true);
   }, []);
-   if (!isClient) {
-     return <Preloader />;
+
+  if (!isClient) {
+    return <Preloader />;
   }
+
   return (
     <div>
-      {/* clientId={CLIENT_ID} */}
-      {/* activeChain={NETWORK_MODE === "mainnet" ? activeChainM : activeChainT} */}
-      {/* supportedChains={[bsc, bscTestnet]} */}
-      {/* supportedWallets={[
-        metamaskWallet({
-          recommended: true,
-        }),
-        trustWallet({
-          recommended: true,
-        }),
-        coinbaseWallet(),
-        walletConnect(),
-        okxWallet(),
-      ]} */}
       <ThirdwebProvider>
         {children}
       </ThirdwebProvider>

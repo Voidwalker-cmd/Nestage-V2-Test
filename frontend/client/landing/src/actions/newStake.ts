@@ -1,35 +1,39 @@
-"use client"
+"use client";
 import { BrowserProvider, Contract, parseUnits } from "ethers";
 // import { eth } from "@/lib";
-import * as T from "@/types"
+import * as T from "@/types";
 import { Axios } from "@/lib/Axios/client";
 import { SiteUrl } from "@/functions";
-import { nestageAddress, NETWORK_MODE } from "@/config";
+import {
+  mAddress,
+  nestageAddress,
+  NETWORK_MODE,
+  nullAddress,
+  tAddress,
+} from "@/config";
 import BUSD_ABI from "@/web3/NestageNw.json";
 import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import { btnState } from "@/components/molecules/LevelOne";
 // import { useAuthStore } from "@/store/auth";
 
-const mAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // mainnet
-const tAddress = "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee"; // testnet
+export const contractAddress = NETWORK_MODE === "testnet" ? tAddress : mAddress;
 
-export const contractAddress = NETWORK_MODE === 'testnet' ? tAddress : mAddress 
+export const getAdminAddress = async (): Promise<T.getAdminAddressResponse> => {
+  const { data, status } = await Axios.get("adminAddress");
+
+  return { data, status };
+};
 
 // Function to create a new mining
-export const newStake = async (
-  form: T.StakingData
-) => {
+export const newStake = async (form: T.StakingData) => {
   // const isAuth = useAuthStore((state) => state.isAuth);
 
   // if(!isAuth) return { status: "error", errorMessage: "Wallet not conneted" }
 
-    const nullAddress = "0x0000000000000000000000000000000000000000";
+  const { data: adminWallets, status } = await getAdminAddress();
 
-  const { data: rawData } = await Axios.get("adminAddress")
-
-  const { data: adminWallets, status } = rawData;
-
-  if(status !== 200) return { status: "error", errorMessage: "Unable to proceed, Try Again!" }
+  if (status !== 200)
+    return { status: "error", errorMessage: "Unable to proceed, Try Again!" };
 
   const admin = adminWallets.admin.address;
 
@@ -52,13 +56,13 @@ export const newStake = async (
   // }
 
   try {
-    const { amount, profit, startDate, endDate } = form;
-    
+    const { amount, profit, startDate, endDate, address } = form;
+
     const amt = parseUnits(amount.toString(), "ether");
     const prt = parseUnits(profit.toString(), "ether");
-    
+
     let pay = parseUnits("0.0", "ether");
-    
+
     let payUpline: T.payUpline = {
       hasUpline: !!0,
       uplineAddress: nullAddress,
@@ -72,22 +76,29 @@ export const newStake = async (
     //   return data.uplines.find((upline) => upline.code === code);
     // }
 
+    let hasRef = !!0
+    let fstUplineAddress = nullAddress
+
     if (!window.location.pathname.includes("/user/")) {
       const refCode = localStorage.getItem("ref");
       if (refCode) {
-        const { data: drefs, status} = await Axios.get<T.getRefByCodeResponse>(
-          `get-referrals?code=${refCode}`
+        const { data: drefs, status } = await Axios.get<T.getRefByCodeResponse>(
+          `referral?withcode=${refCode}`
         );
         if (status === 200) {
-          const fstUplineAddress = drefs?.address;
+          fstUplineAddress = drefs?.address;
 
-          const bonus = SiteUrl.includes("testing") || SiteUrl.includes(":4110") ? 0.5 : 1.5;
+          const bonus =
+            SiteUrl.includes("testing") || SiteUrl.includes(":4110")
+              ? 0.5
+              : 1.5;
           pay = parseUnits(bonus.toString(), "ether");
           payUpline = {
             hasUpline: !!1,
             uplineAddress: fstUplineAddress,
             pay,
           };
+          hasRef = !!1
         }
       }
 
@@ -116,28 +127,29 @@ export const newStake = async (
       const signer = await provider.getSigner();
 
       const contract = new Contract(nestageAddress!, BUSD_ABI, signer);
-      const busdContract = new Contract(contractAddress, PLAIN_BUSD_ABI, signer);
+      const busdContract = new Contract(
+        contractAddress,
+        PLAIN_BUSD_ABI,
+        signer
+      );
 
       try {
         btnState.value = "Awaiting Approval";
-        await busdContract.allowance(
-          await signer.getAddress(),
-          nestageAddress
-        );
+        await busdContract.allowance(await signer.getAddress(), nestageAddress);
 
         // if (!currentAllowance.lt(amount)) {
         const approvalTx = await busdContract.approve(nestageAddress, amt);
-      //   dispatch(setTransactionState({ state: "approving" }));
+        //   dispatch(setTransactionState({ state: "approving" }));
         await approvalTx.wait();
-      //   dispatch(setTransactionState({ state: "approved" }));
+        //   dispatch(setTransactionState({ state: "approved" }));
 
         // setTimeout(() => {
         //   // dispatch(setTransactionState({ state: "awaiting payment" }));
         // }, 1200);
         // }
-        
+
         const startNewStake = contract.getFunction("startNewStake");
-        
+
         const gasEstimate = await startNewStake.estimateGas(
           amt,
           admin,
@@ -149,11 +161,11 @@ export const newStake = async (
           payUpline.pay
         );
         btnState.value = "Approved";
-        
+
         const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
-        
-        
+
         btnState.value = "Awaiting Confirmation";
+
         const tx = await startNewStake(
           amt,
           admin,
@@ -168,20 +180,37 @@ export const newStake = async (
           }
         );
 
-      //   dispatch(setTransactionState({ state: "paying" }));
+        //   dispatch(setTransactionState({ state: "paying" }));
 
         await tx.wait();
-        console.log({tx})
+        console.log({ tx });
+
+        const { data: Tx }: T.bscScan = await Axios.get(`tx?hash=${tx.hash}`);
         // await dispatch(validateHash({ txHash: tx.hash }));
 
         // const Tx: T.bscscan = verifiedTx?.payload;
 
         // const { result: Txx } = Tx;
 
-        // if (Txx.status === "1") {
-      //   dispatch(setTransactionState({ state: "payed" }));
-      //   dispatch(saveStat({ type: "levelOne", amount }));
-      btnState.value = "Confirmed";
+        if(NETWORK_MODE === 'mainnet') {
+          if (Tx.result.status === "1") {
+            //   dispatch(setTransactionState({ state: "payed" }));
+            //   dispatch(saveStat({ type: "levelOne", amount }));
+            Axios.post("tx", { type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress} });
+            btnState.value = "Confirmed";
+          }
+        } else {
+            if (Tx.status === "1") {
+              //   dispatch(setTransactionState({ state: "payed" }));
+              //   dispatch(saveStat({ type: "levelOne", amount }));
+              Axios.post("tx", { type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress} });
+              btnState.value = "Confirmed";
+            }
+
+          }
+        return {
+          status: "success",
+        };
 
         // result = {
         //   isLoading: !!0,
@@ -190,13 +219,24 @@ export const newStake = async (
         // };
         // }
       } catch (error) {
-        console.log(typeof error)
+        console.log(typeof error);
         console.error("Error calling startNewStake:", error);
+        btnState.value = "Initializing";
+        return {
+          status: "error",
+          errorMessage: "Error processing your transaction!",
+        };
       }
     } else {
+      btnState.value = "Initializing";
       console.error("Dapp is not installed!");
+      return {
+        status: "error",
+        errorMessage: "Dapp not found!",
+      };
     }
   } catch (error) {
+    btnState.value = "Initializing";
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,
@@ -204,7 +244,9 @@ export const newStake = async (
     //   error: errorMessage,
     // };
     console.log({ errorMessage });
+    return {
+      status: "error",
+      errorMessage,
+    };
   }
-
-  return {hello: "world"};
 };
