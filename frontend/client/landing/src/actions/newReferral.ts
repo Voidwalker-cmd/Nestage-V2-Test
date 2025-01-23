@@ -3,7 +3,6 @@
 import * as T from "@/types";
 import { contractAddress, getAdminAddress } from "./newStake";
 import { BrowserProvider, Contract, parseUnits } from "ethers";
-import { SiteUrl } from "@/functions";
 import { nestageAddress } from "@/config";
 import BUSD_ABI from "@/web3/NestageNw.json";
 import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
@@ -43,7 +42,7 @@ export const newReferral = async (form: T.refData) => {
 
   try {
     let info: [string[] | [], string];
-    let createNewRef = !!1;
+    const createNewRef = !!1;
 
     if (refCode) {
       // const refs = await dispatch(getRefByCode({ code: refCode }));
@@ -151,7 +150,7 @@ export const newReferral = async (form: T.refData) => {
           }
           if (perform) {
               btnStateTwo.value = "Confirmed";
-          createNewRef &&
+          if(createNewRef){
             (async () => {
                 btnStateTwo.value = "Finalizing";
               const code = refCode === null ? null : String(refCode);
@@ -160,6 +159,7 @@ export const newReferral = async (form: T.refData) => {
               //   await dispatch(createRefs(details));
               await Axios.post("referral", details);
                   })();
+          }
 
           const lx: string[] = info![0];
           const len = lx.length;
@@ -188,6 +188,7 @@ export const newReferral = async (form: T.refData) => {
           status: "success",
         };
       } catch (error) {
+        console.log({error})
         // const idx = sessionStorage.getItem("temp");
         // const rm = async () => {
         //   // const resx = await dispatch(removeRef({ id: String(idx) }));

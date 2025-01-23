@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
       result = d;
       statusCode = s;
     } catch (e: any) {
+      console.log({e})
       result = "Not found";
       statusCode = 404;
     }
@@ -33,6 +34,7 @@ export async function GET(request: NextRequest) {
       result = d;
       statusCode = s;
     } catch (e: any) {
+      console.log({e})
       result = "Not found";
       statusCode = 404;
     }
@@ -44,6 +46,7 @@ export async function GET(request: NextRequest) {
       result = d;
       statusCode = s;
     } catch (e: any) {
+      console.log({e})
       result = "No referral found";
       statusCode = 404;
     }
@@ -61,6 +64,7 @@ export async function GET(request: NextRequest) {
 
   return response;
   // } catch (e: any) {
+  console.log({e})
 
   //   return new Response(JSON.stringify({ error: e.response.data.error }), {
   //     status: 500,
@@ -72,7 +76,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  let body = await request.json();
+  const body = await request.json();
 
   const { address, code } = body;
 
@@ -86,6 +90,7 @@ export async function POST(request: NextRequest) {
     result = d;
     statusCode = s;
   } catch (e: any) {
+    console.log({e})
     result = "Error";
     statusCode = 500;
   }

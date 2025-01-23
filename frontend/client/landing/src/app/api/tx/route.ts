@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     result = d;
     statusCode = s;
   } catch (e: any) {
+        console.log({e})
     result = "Not found";
     statusCode = 404;
   }
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  let body = await request.json();
+  const body = await request.json();
 
   const { address, type, amount, refBonus } = body;
 
