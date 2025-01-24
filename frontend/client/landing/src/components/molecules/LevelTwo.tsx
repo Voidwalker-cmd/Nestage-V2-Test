@@ -20,7 +20,7 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
     const address = useWeb3Store((state) => state.address);
     const { balance, symbol } = useBNB(address);
 
-    const minAllow = SITE_MODE === 'test' ? 1 : 5;
+    const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 1 : 5;
 
     const [bal, setBal] = useState<number | string>(0);
     const [busd, setBusd] = useState<number | string>(0);
