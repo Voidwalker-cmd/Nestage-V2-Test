@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import * as T from "@/types";
-import { SITE_MODE } from '@/config';
+import { SITE_MODE, refKey } from '@/config';
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
@@ -14,20 +14,30 @@ import { newStake } from "@/actions/newStake";
 import { SiteUrl } from "@/functions";
 import { signal } from "@preact/signals-react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export const btnState = signal("Initializing");
 
 const LevelOne = ({ setStage }: T.ModalProps) => {
+    const router = useRouter();
     const address = useWeb3Store((state) => state.address);
     const { balance: bnb, symbol } = useBNB(address);
     const [busd, setBusd] = useState<number | string>(0);
     const [hasErr, setHasErr] = useState<boolean>(!!0)
-    const [loading, setLoading] = useState<boolean>(!!0)
     const [err, setErr] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(!!0)
 
     const [bal, setBal] = useState<number | string>(0);
     const [disabled, setDisabled] = useState(!!1);
     const [amount, setAmount] = useState<string>("");
+    const [refCode, setRefCode] = useState<string>("");
+
+    useEffect(() => {
+        const ref = localStorage.getItem(refKey);
+        if(ref) {
+            setRefCode(ref)
+        }
+    }, [])
 
     useEffect(() => {
         const fetchBusd = async () => {
@@ -82,6 +92,7 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
             profit: p,
             planId: 0,
             uuid,
+            address
         };
         setLoading(!!1)
         const res = await newStake(send)
@@ -90,11 +101,14 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
         if (res.status === 'error') {
             setHasErr(!!1);
             // setDisabled(!!1)
-            setErr(res.errorMessage); 
+            setErr(res.errorMessage!); 
             btnState.value = "Initializing" 
             return;
+        } else {
+            btnState.value = "Redirecting" 
+            // setLoading(!!0)
+            router.push(`/user/${address}`)
         }
-        setLoading(!!0)
     }
 
     useEffect(() => {
@@ -112,10 +126,11 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
                 <h1 className="text-xl font-bold mb-4">Level 1 De-Fi Staking</h1>
 
                 <div className="py-5">
+                    {refCode !== "" ? (
                     <div className="mb-2">
                         <p className="block text-sm font-semibold mb-1 text-center py-2">Upline</p>
-                        <div className="w-full px-4 py-2 rounded-lg bg-gray-500 flex justify-center font-medium">1</div>
-                    </div>
+                        <div className="w-full px-4 py-2 rounded-lg bg-gray-500 flex justify-center font-medium">{refCode}</div>
+                    </div>) : ("")}
 
                     <div className="mb-2 flex items-center justify-start gap-2">
                         <label className="block text-sm font-medium mb-1">Wallet address:</label>
@@ -182,8 +197,8 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
                             disabled={!!1}
                             className="px-4 py-2 rounded-full bg-green-800 text-white font-semibold hover:bg-green-700 cursor-not-allowed flex justify-center items-center gap-2"
                         >
-                            {btnState}
                             <Loader2 className="h-3 w-3 animate-spin" />
+                            {btnState}
                         </Button>
                         )}
                     </div>

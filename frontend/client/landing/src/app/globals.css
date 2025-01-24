@@ -94,3 +94,15 @@ body {
 .darkModeText {
   @apply !text-black dark:!text-white
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    /* Optional: You can adjust the margin if needed */
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    /* Firefox */
+}
