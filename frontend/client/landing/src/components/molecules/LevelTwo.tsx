@@ -11,6 +11,7 @@ import { SITE_MODE, refKey } from "@/config";
 import { signal } from "@preact/signals-react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from 'next/navigation';
+import { newReferral } from "@/actions/newReferral";
 
 export const btnStateTwo = signal("Initializing");
 
