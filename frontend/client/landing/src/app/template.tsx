@@ -6,7 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 import Preloader from "@/components/molecules/Loader";
 import { useSearchParams } from 'next/navigation'
-import { saveRef } from "@/functions";
+import { saveRef } from "@/functions/saveRef";
 import { refKey } from "@/config";
 
 export default function Template({ children }: { children: React.ReactNode }) {
@@ -24,14 +24,16 @@ export default function Template({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    if (isClient) {
     const ref = searchParams.get('ref')
 
-    if (ref && isClient) {
+    if (ref) {
       console.log(ref)
       SaveRef(ref as string);
     }
+    }
 
-  }, [searchParams, isClient]);
+  }, [isClient]);
 
   useEffect(() => {
     setIsClient(true);

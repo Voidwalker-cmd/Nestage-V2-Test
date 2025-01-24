@@ -17,7 +17,3 @@ const port = window.location.port ? `:${window.location.port}` : "";
 
 export const SiteUrl = `${url}${port}`;
 
-export const saveRef = async (ref: string) => {
-  const { data } = await Axios.get(`referral?ref=${ref}`)
-  return data
-}

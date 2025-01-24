@@ -1,3 +1,4 @@
+// "use client"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/molecules/DashboardSidebar";
 import { cookies } from "next/headers"
