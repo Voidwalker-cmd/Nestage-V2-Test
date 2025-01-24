@@ -199,14 +199,14 @@ export const newReferral = async (form: T.refData) => {
       }
     } else {
       console.error("Dapp is not installed!");
-      btnState.value = "Initializing";
+      btnStateTwo.value = "Initializing";
     return {
         status: "error",
         errorMessage: "Dapp not found!",
       };
     }
   } catch (error) {
-    btnState.value = "Initializing";
+    btnStateTwo.value = "Initializing";
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,
