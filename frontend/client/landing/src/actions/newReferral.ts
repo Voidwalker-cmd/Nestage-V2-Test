@@ -9,6 +9,10 @@ import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import { btnStateTwo } from "@/components/molecules/LevelTwo";
 import { Axios } from "@/lib/Axios/client";
 
+const updateBtnState = (newValue: string) => {
+  btnStateTwo.value = newValue;
+};
+
 export const newReferral = async (form: T.refData) => {
   // dispatch(getWallets({ blank: 0 }));
   const { data: adminWallets, status } = await getAdminAddress();
@@ -100,7 +104,7 @@ export const newReferral = async (form: T.refData) => {
         //     await signer.getAddress(),
         //     nestageAddress
           //   );
-          btnStateTwo.value = "Awaiting Approval";
+          updateBtnState("Awaiting Approval");
 
         const approvalTx = await busdContract.approve(nestageAddress, xamt);
         //   dispatch(setTransactionState({ state: "approving" }));
@@ -119,17 +123,18 @@ export const newReferral = async (form: T.refData) => {
           xamt
         );
 
-        btnStateTwo.value = "Approved";
+        updateBtnState("Approved");
 
         const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
 
-          btnStateTwo.value = "Awaiting Confirmation";
+          updateBtnState("Awaiting Confirmation");
         const tx = await startNewReferral(info![0], info![1], xamt, {
           gasLimit,
         });
         //   dispatch(setTransactionState({ state: "paying" }));
 
         await tx.wait();
+        updateBtnState("Confirming");
         const { data: Tx }: T.bscScan = await Axios.get(`tx?hash=${tx.hash}`);
 
         // const Tx: T.bscscan = verifiedTx?.payload;
@@ -149,10 +154,10 @@ export const newReferral = async (form: T.refData) => {
               perform = !!1
           }
           if (perform) {
-              btnStateTwo.value = "Confirmed";
+              updateBtnState("Confirmed");
           if(createNewRef){
             (async () => {
-                btnStateTwo.value = "Finalizing";
+                updateBtnState("Finalizing");
               const code = refCode === null ? null : String(refCode);
               let details: T.createRefParams = { address: address };
               details = code !== null ? { ...details, code } : { ...details };
@@ -183,7 +188,7 @@ export const newReferral = async (form: T.refData) => {
 
         //   dispatch(saveStat({ type: "levelTwo", amount }));
           //   dispatch(setTransactionState({ state: "payed" }));
-          btnStateTwo.value = "Completed";
+          updateBtnState("Completed");
           return {
           status: "success",
         };
@@ -196,7 +201,7 @@ export const newReferral = async (form: T.refData) => {
         //     sessionStorage.removeItem("temp");
         // };
         // if (idx) rm();
-        btnStateTwo.value = "Initializing";
+        updateBtnState("Initializing");
     return {
         status: "error",
         errorMessage: "Error!",
@@ -204,14 +209,14 @@ export const newReferral = async (form: T.refData) => {
       }
     } else {
       console.error("Dapp is not installed!");
-      btnStateTwo.value = "Initializing";
+      updateBtnState("Initializing");
     return {
         status: "error",
         errorMessage: "Dapp not found!",
       };
     }
   } catch (error) {
-    btnStateTwo.value = "Initializing";
+    updateBtnState("Initializing");
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,
