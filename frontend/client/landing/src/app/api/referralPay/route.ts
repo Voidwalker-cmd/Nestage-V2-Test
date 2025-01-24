@@ -15,7 +15,9 @@ export async function POST(request: NextRequest) {
     });
     result = d;
     statusCode = s;
-  } catch (e: any) {
+  } catch (err) {
+      const e = (err as Error).message;
+      console.log({e})
     result = "Error";
     statusCode = 500;
   }
