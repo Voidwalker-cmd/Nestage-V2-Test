@@ -69,7 +69,13 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
             return
         }
 
-        const res = await newReferral() 
+        const send = {
+            address,
+            referral: refCode,
+            amount: minAllow
+        }
+
+        const res = await newReferral(send) 
 
         console.log({res})
         if (res.status === 'error') {
