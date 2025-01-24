@@ -72,7 +72,7 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
         const send = {
             address,
             referral: refCode,
-            amount: minAllow
+            amount: String(minAllow)
         }
 
         const res = await newReferral(send) 
