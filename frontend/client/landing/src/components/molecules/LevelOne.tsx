@@ -97,10 +97,11 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
         setLoading(!!1)
         const res = await newStake(send)
         
-        console.log({res})
+        // console.log({res})
         if (res.status === 'error') {
+            setLoading(!!0)
             setHasErr(!!1);
-            // setDisabled(!!1)
+            setDisabled(!!0)
             setErr(res.errorMessage!); 
             btnState.value = "Initializing" 
             return;

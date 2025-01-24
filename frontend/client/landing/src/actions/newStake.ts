@@ -16,12 +16,16 @@ import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import { btnState } from "@/components/molecules/LevelOne";
 // import { useAuthStore } from "@/store/auth";
 
+const updateBtnState = (newValue: string) => {
+  btnState.value = newValue;
+};
+
 export const contractAddress = NETWORK_MODE === "testnet" ? tAddress : mAddress;
 
 export const getAdminAddress = async (): Promise<T.getAdminAddressResponse> => {
   const { data, status } = await Axios.get("adminAddress");
 
-  return { data, status };
+  return { data: data.data, status };
 };
 
 // Function to create a new mining
@@ -34,7 +38,7 @@ export const newStake = async (form: T.StakingData) => {
 
   if (status !== 200)
     return { status: "error", errorMessage: "Unable to proceed, Try Again!" };
-
+  
   const admin = adminWallets.admin.address;
 
   // dispatch(setTransactionState({ state: "initializing" }));
@@ -134,7 +138,7 @@ export const newStake = async (form: T.StakingData) => {
       );
 
       try {
-        btnState.value = "Awaiting Approval";
+        updateBtnState("Awaiting Approval");
         await busdContract.allowance(await signer.getAddress(), nestageAddress);
 
         // if (!currentAllowance.lt(amount)) {
@@ -160,11 +164,11 @@ export const newStake = async (form: T.StakingData) => {
           payUpline.uplineAddress,
           payUpline.pay
         );
-        btnState.value = "Approved";
+        updateBtnState("Approved");
 
         const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
 
-        btnState.value = "Awaiting Confirmation";
+        updateBtnState("Awaiting Confirmation");
 
         const tx = await startNewStake(
           amt,
@@ -179,10 +183,11 @@ export const newStake = async (form: T.StakingData) => {
             gasLimit,
           }
         );
-
+        
         //   dispatch(setTransactionState({ state: "paying" }));
-
+        
         await tx.wait();
+        updateBtnState("Confirming");
         console.log({ tx });
 
         const { data: Tx }: T.bscScan = await Axios.get(`tx?hash=${tx.hash}`);
@@ -197,14 +202,14 @@ export const newStake = async (form: T.StakingData) => {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
             Axios.post("tx", { type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress} });
-            btnState.value = "Confirmed";
+            updateBtnState("Confirmed");
           }
         } else {
             if (Tx.status === "1") {
               //   dispatch(setTransactionState({ state: "payed" }));
               //   dispatch(saveStat({ type: "levelOne", amount }));
               Axios.post("tx", { type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress} });
-              btnState.value = "Confirmed";
+              updateBtnState("Confirmed");
             }
 
           }
@@ -221,14 +226,14 @@ export const newStake = async (form: T.StakingData) => {
       } catch (error) {
         console.log(typeof error);
         console.error("Error calling startNewStake:", error);
-        btnState.value = "Initializing";
+        updateBtnState("Initializing");
         return {
           status: "error",
           errorMessage: "Error processing your transaction!",
         };
       }
     } else {
-      btnState.value = "Initializing";
+      updateBtnState("Initializing");
       console.error("Dapp is not installed!");
       return {
         status: "error",
@@ -236,7 +241,7 @@ export const newStake = async (form: T.StakingData) => {
       };
     }
   } catch (error) {
-    btnState.value = "Initializing";
+    updateBtnState("Initializing");
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,

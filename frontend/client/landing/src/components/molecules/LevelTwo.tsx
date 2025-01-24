@@ -77,10 +77,11 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
 
         const res = await newReferral(send) 
 
-        console.log({res})
+        // console.log({res})
         if (res.status === 'error') {
             setHasErr(!!1);
-            // setDisabled(!!1)
+            setLoading(!!0)
+            // setDisabled(!!0)
             setErr(res.errorMessage!); 
             btnStateTwo.value = "Initializing" 
             return;
