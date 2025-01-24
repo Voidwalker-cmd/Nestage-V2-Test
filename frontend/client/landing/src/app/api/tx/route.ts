@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
     );
     result = d;
     statusCode = s;
-  } catch (e: any) {
+  } catch (err) {
+    const e = (err as Error).message;
         console.log({e})
     result = "Not found";
     statusCode = 404;
@@ -55,7 +56,8 @@ export async function POST(request: NextRequest) {
     }
     result = "ok";
     statusCode = 201;
-  } catch (e: any) {
+  } catch (err) {
+    const e = (err as Error).message;
     console.log({e})
     result = "Error";
     statusCode = 500;

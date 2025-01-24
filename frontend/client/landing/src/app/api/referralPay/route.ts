@@ -2,7 +2,7 @@ import { ServerAxios } from "@/lib/Axios/server";
 import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
-  let body = await request.json();
+  const body = await request.json();
 
   const { adminPay, userPay } = body;
 
