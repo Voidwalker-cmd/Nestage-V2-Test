@@ -82,10 +82,10 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
             setHasErr(!!1);
             // setDisabled(!!1)
             setErr(res.errorMessage!); 
-            btnState.value = "Initializing" 
+            btnStateTwo.value = "Initializing" 
             return;
         } else {
-            btnState.value = "Redirecting" 
+            btnStateTwo.value = "Redirecting" 
             // setLoading(!!0)
             router.push(`/user/${address}`)
         }
