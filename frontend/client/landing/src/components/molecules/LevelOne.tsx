@@ -47,7 +47,7 @@ const LevelOne = ({ setStage }: T.ModalProps) => {
         fetchBusd();
     }, [address]);
 
-    const minAllow = SITE_MODE === 'test' ? 2 : 10;
+    const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 2 : 10;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const regex = /^[1-9][0-9]*$/;
