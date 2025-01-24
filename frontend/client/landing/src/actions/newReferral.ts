@@ -196,6 +196,11 @@ export const newReferral = async (form: T.refData) => {
         //     sessionStorage.removeItem("temp");
         // };
         // if (idx) rm();
+        btnStateTwo.value = "Initializing";
+    return {
+        status: "error",
+        errorMessage: "Error!",
+      };
       }
     } else {
       console.error("Dapp is not installed!");
