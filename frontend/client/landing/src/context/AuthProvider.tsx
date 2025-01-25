@@ -3,9 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAutoConnect, useActiveWalletConnectionStatus } from "thirdweb/react";
-import { client } from '@/components/molecules/ConnectWallet';
+// import { client } from '@/components/molecules/ConnectWallet';
 import { Wallet } from 'thirdweb/wallets';
 import Preloader from '@/components/molecules/Loader';
+import { CLIENT_ID, NETWORK_MODE } from "@/config";
+import { createThirdwebClient } from "thirdweb";
+
+export const client = createThirdwebClient({
+    clientId: CLIENT_ID!,
+});
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
