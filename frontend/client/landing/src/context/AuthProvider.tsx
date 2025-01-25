@@ -1,20 +1,20 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useActiveWalletConnectionStatus } from "thirdweb/react";
-import { client } from '@/components/molecules/ConnectWallet';
-import { Wallet } from 'thirdweb/wallets';
+// import { useParams, useRouter } from 'next/navigation';
+// import { useActiveWalletConnectionStatus } from "thirdweb/react";
+// import { client } from '@/components/molecules/ConnectWallet';
+// import { Wallet } from 'thirdweb/wallets';
 import Preloader from '@/components/molecules/Loader';
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
+  // const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
 
-  const router = useRouter();
-  const params = useParams<{ userAddress: string }>();
+  // const router = useRouter();
+  // const params = useParams<{ userAddress: string }>();
 
-  const [address, setAddress] = useState("");
-  const [isLoading, setIsLoading] = useState(!!1);
+  // const [address, setAddress] = useState("");
+  const [isLoading] = useState(!!1);
   const [isClient, setIsClient] = useState(!!0);
 
   // const { data: autoConnected, isLoading: isLoaded } = useAutoConnect({
