@@ -1,4 +1,4 @@
-import type { Metadata, ResolvingMetadata } from 'next'
+import type { Metadata } from 'next'
 import UserIndex from "@/components/pages/Users/Index"
 import { shortenHexStringServer } from '@/utils/server'
 
