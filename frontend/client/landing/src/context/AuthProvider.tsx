@@ -6,7 +6,7 @@ import { useAutoConnect, useActiveWalletConnectionStatus } from "thirdweb/react"
 // import { client } from '@/components/molecules/ConnectWallet';
 import { Wallet } from 'thirdweb/wallets';
 import Preloader from '@/components/molecules/Loader';
-import { CLIENT_ID, NETWORK_MODE } from "@/config";
+import { CLIENT_ID } from "@/config";
 import { createThirdwebClient } from "thirdweb";
 
 export const client = createThirdwebClient({
