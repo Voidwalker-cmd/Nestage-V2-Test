@@ -55,7 +55,7 @@ const ConnectWallet = ({ state }: ConnectWalletProps) => {
 
     const Redirect = () => {
         if (hasStake || hasRef) {
-            setDisabled(!!0)
+            setDisabled(!!1)
             router.push(`/user/${address}`)
         } else {
             setDisabled(!!0)
@@ -115,7 +115,7 @@ const ConnectWallet = ({ state }: ConnectWalletProps) => {
                 <>
                     {disabled ? (
                         <Button
-                            disabled={init === 1 ? !!1 : !!0}
+                            disabled={init === 1 || disabled ? !!1 : !!0}
                             variant="default"
                             className={`text-semibold rounded-full border border-gray-500 text-white font-semibold ${state === 'fill' ? "bg-[#06351C]" : "bg-transparent"} ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
                         >

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Preloader from "@/components/molecules/Loader";
 import { saveRef } from "@/functions/saveRef";
 import { refKey } from "@/config";
+import AuthProvider from "@/context/AuthProvider";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
@@ -19,7 +20,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isClient) {
-      const params = new URLSearchParams(window.location.search); // Use URLSearchParams
+      const params = new URLSearchParams(window.location.search);
       const ref = params.get("ref");
 
       if (ref) {
@@ -39,7 +40,11 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <div>
-      <ThirdwebProvider>{children}</ThirdwebProvider>
+      <ThirdwebProvider>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </ThirdwebProvider>
     </div>
   );
 }
