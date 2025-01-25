@@ -1,35 +1,35 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const EXCLUDED_PATHS = ["/api"];
-const ALLOWED_ORIGINS = [
-  "https://nestage.io", 
-  "https://v2-testing.nestage.io",
-  // "http://" 
-];
+// const EXCLUDED_PATHS = ["/api"];
+// const ALLOWED_ORIGINS = [
+//   "https://nestage.io",
+//   "https://v2-testing.nestage.io",
+//   "http://localhost:4110/"
+// ];
 
 export async function middleware(req: NextRequest) {
   const { host, pathname } = req.nextUrl;
 
-  
-  if (
-    EXCLUDED_PATHS.some((excludedPath) => pathname.startsWith(excludedPath))
-  ) {
-    return NextResponse.next();
-  }
 
-  
-  const referer = req.headers.get("referer") || "";
-  const origin = req.headers.get("origin") || "";
-
-  const isOriginAllowed = ALLOWED_ORIGINS.some((allowedOrigin) => {
-    return referer.startsWith(allowedOrigin) || origin === allowedOrigin;
-  });
-
-  console.log(isOriginAllowed)
-  if (!isOriginAllowed) {
-    return new NextResponse("Forbidden: Not allowed to visit", { status: 403 });
-  }
+  // if (
+  //   EXCLUDED_PATHS.some((excludedPath) => pathname.startsWith(excludedPath))
+  // ) {
+  //   return NextResponse.next();
+  // }
+  //
+  //
+  // const referer = req.headers.get("referer") || "";
+  // const origin = req.headers.get("origin") || "";
+  //
+  // const isOriginAllowed = ALLOWED_ORIGINS.some((allowedOrigin) => {
+  //   return referer.startsWith(allowedOrigin) || origin === allowedOrigin;
+  // });
+  //
+  // console.log({isOriginAllowed, referer, origin})
+  // if (!isOriginAllowed) {
+  //   return new NextResponse("Forbidden: Not allowed to visit", { status: 403 });
+  // }
 
   let proceed = !!1;
   let isValid = !!0;
@@ -46,7 +46,7 @@ export async function middleware(req: NextRequest) {
     pingUrl = "https://prev-api.nestage.io:4110/api/v1/ping";
   }
 
-  
+
   if (proceed) {
     while (!isValid && attempts < maxAttempts) {
       try {
@@ -87,5 +87,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api).*)", 
+  matcher: "/((?!api).*)",
 };
