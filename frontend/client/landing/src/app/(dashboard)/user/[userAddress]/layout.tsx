@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/molecules/DashboardSidebar";
 import { cookies } from "next/headers"
 
 import type { Metadata } from "next";
-import "./../../globals.css";
+import "./../../../globals.css";
 import DashboardNav from "@/components/organisms/DashboardNav";
 import { ThemeProvider } from "@/components/molecules/ThemeProvider"
 
@@ -20,30 +20,26 @@ export default async function Layout({ children, levelOne, levelTwo }: { childre
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
 
   return (
-    <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar />
-            <main className="w-full h-full dark:bg-[#0A0A0A]">
-        <DashboardNav />
-              <div className="pt-20 pb-5 lg:pt-0 lg:pb-10">
-                {children}
-          {levelOne}
-          {levelTwo}
-        </div>
-      </main>
-    </SidebarProvider>
+    <>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <AppSidebar />
+        <main className="w-full h-full dark:bg-[#0A0A0A]">
+          <DashboardNav />
+          <div className="pt-20 pb-5 lg:pt-0 lg:pb-10">
+            {children}
+            {levelOne}
+            {levelTwo}
+          </div>
+        </main>
+      </SidebarProvider>
     </ThemeProvider>
-    </body>
-    </html>
+    </>
   )
 }
 

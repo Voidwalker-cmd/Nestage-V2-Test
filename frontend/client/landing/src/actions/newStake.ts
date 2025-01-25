@@ -3,7 +3,7 @@ import { BrowserProvider, Contract, parseUnits } from "ethers";
 // import { eth } from "@/lib";
 import * as T from "@/types";
 import { Axios } from "@/lib/Axios/client";
-import { SiteUrl } from "@/functions";
+import { SiteUrl } from "@/functions/site";
 import {
   mAddress,
   nestageAddress,

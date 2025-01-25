@@ -11,7 +11,7 @@ import { djs, Formatter, shortenHexString, uuid } from "@/utils";
 import { useBNB, getBUSD } from "@/hooks/useBalance";
 import RightSide from "./RightSide";
 import { newStake } from "@/actions/newStake";
-import { SiteUrl } from "@/functions";
+import { SiteUrl } from "@/functions/site";
 import { signal } from "@preact/signals-react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from 'next/navigation';
