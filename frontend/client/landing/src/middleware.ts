@@ -9,7 +9,7 @@ import type { NextRequest } from "next/server";
 // ];
 
 export async function middleware(req: NextRequest) {
-  const { host, pathname } = req.nextUrl;
+  const { host } = req.nextUrl;
 
 
   // if (
