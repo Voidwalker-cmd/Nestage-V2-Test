@@ -7,7 +7,7 @@ import { bsc, bscTestnet } from "thirdweb/chains";
 import { createThirdwebClient } from "thirdweb";
 import { useEffect, useState } from "react";
 
-import { CLIENT_ID, NETWORK_MODE } from "@/config";
+import { NETWORK_MODE } from "@/config";
 import { createWallet } from "thirdweb/wallets";
 import { useWeb3Store } from "@/store";
 import { useAuthStore } from "@/store/auth";
@@ -22,7 +22,7 @@ interface ConnectWalletProps {
 }
 
 export const client = createThirdwebClient({
-    clientId: CLIENT_ID!,
+    clientId: "520d55c9ed1eb0dc52af37d81000ce76",
 });
 
 const type = 'dark'
