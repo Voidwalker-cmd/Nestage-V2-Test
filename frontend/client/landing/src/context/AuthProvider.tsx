@@ -44,7 +44,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   
   const initY = async () => {
     let result = !!0;
-    if (stakerList.length) result = await searchStringInArray(stakerList, address);
+    if (stakerList.length) result = searchStringInArray(stakerList, address);
     return result;
   }
   
