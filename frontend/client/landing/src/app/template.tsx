@@ -24,7 +24,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
       const ref = params.get("ref");
 
       if (ref) {
-        console.log(ref);
         SaveRef(ref as string);
       }
     }
