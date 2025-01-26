@@ -1,21 +1,17 @@
 "use client"
 
-import { nestageAddress } from "@/config";
-import { client } from "@/components/molecules/ConnectWallet";
-import { bscTestnet, bsc } from "thirdweb/chains";
-import { NETWORK_MODE } from "@/config";
-import { useWalletBalance } from "thirdweb/react";
-import { BrowserProvider, Contract, formatUnits } from "ethers";
+import {nestageAddress, NETWORK_MODE} from "@/config";
+import {client} from "@/components/molecules/ConnectWallet";
+import {bsc, bscTestnet} from "thirdweb/chains";
+import {useWalletBalance} from "thirdweb/react";
+import {BrowserProvider, Contract, formatUnits} from "ethers";
 import BUSD_ABI from "@/web3/NestageNw.json";
 
 export const useBNB = (walletAddress: string) => {
-    const activeChainT = bscTestnet;
-    const activeChainM = bsc;
-
     const { data, isLoading, isError } = useWalletBalance({
         client: client,
         address: walletAddress,
-        chain: NETWORK_MODE === "mainnet" ? activeChainM : activeChainT,
+        chain: NETWORK_MODE === "mainnet" ? bsc : bscTestnet,
     });
 
     

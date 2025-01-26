@@ -8,8 +8,8 @@ import * as T from "@/types";
       <div className="flex flex-col lg:flex-row justify-center items-center gap-5 w-full lg:max-w-2xl h-full px-10 lg:px-0 py-5 lg:py-0 mt-5">
           <div className="w-full px-10 mx-auto bg-gray-800 text-white rounded-xl shadow-lg p-6">
               <h2 className="text-center text-xl font-bold mb-1">LEVEL 1</h2>
-              <p className="text-center text-sm font-medium mb-4">Nestage DeFi Staking</p>
-              <ul className="py-5 space-y-2 text-sm font-light">
+              <p className="text-center text-base font-medium mb-4">Nestage DeFi Staking</p>
+              <ul className="py-5 space-y-2 text-base font-normal">
                   <li>• Minimum entry fee 10 BUSD</li>
                   <li>• 30% profit on your stake</li>
                   <li>• Instant transactions</li>
@@ -24,8 +24,8 @@ import * as T from "@/types";
 
           <div className="w-full px-10 mx-auto bg-gray-800 text-white rounded-xl shadow-lg p-6">
               <h2 className="text-center text-xl font-bold mb-1">LEVEL 2</h2>
-              <p className="text-center text-sm font-medium mb-4">Nestage Decentralized Matrix</p>
-              <ul className="py-5 space-y-2 text-sm font-light">
+              <p className="text-center text-base font-medium mb-4">Nestage Decentralized Matrix</p>
+              <ul className="py-5 space-y-2 text-base font-normal">
                   <li>• Entry fee 5 BUSD</li>
                   <li>• Network-based earnings</li>
                   <li>• Transparency and automation</li>

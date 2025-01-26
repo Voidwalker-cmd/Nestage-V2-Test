@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import {NextResponse} from "next/server";
+import type {NextRequest} from "next/server";
 
 // const EXCLUDED_PATHS = ["/api"];
 // const ALLOWED_ORIGINS = [
@@ -9,9 +9,9 @@ import type { NextRequest } from "next/server";
 // ];
 
 export async function middleware(req: NextRequest) {
-  const { host } = req.nextUrl;
-
-
+  const {host} = req.nextUrl;
+  
+  
   // if (
   //   EXCLUDED_PATHS.some((excludedPath) => pathname.startsWith(excludedPath))
   // ) {
@@ -30,23 +30,25 @@ export async function middleware(req: NextRequest) {
   // if (!isOriginAllowed) {
   //   return new NextResponse("Forbidden: Not allowed to visit", { status: 403 });
   // }
-
+  
   let proceed = !!1;
   let isValid = !!0;
   let attempts = 0;
-  const maxAttempts = 5;
-
+  let maxAttempts = 20;
+  let limit = 1500
+  
   let pingUrl = "https://api.nestage.io/api/v1/ping";
-
-  if (host.includes("localhost:4110")) {
-    pingUrl = "https://localhost:4110/api/v1/ping";
+  
+  if (host.includes(":4110")) {
+    pingUrl = "http://localhost:1335/api/v1/ping";
     proceed = !!0;
     isValid = !!1;
+    maxAttempts = 5
+    limit = 500
   } else if (host.includes("testing")) {
     pingUrl = "https://prev-api.nestage.io/api/v1/ping";
   }
-
-
+  
   if (proceed) {
     while (!isValid && attempts < maxAttempts) {
       try {
@@ -56,33 +58,33 @@ export async function middleware(req: NextRequest) {
             "Content-Type": "application/json",
           },
         });
-
+        
         if (!response.ok) {
           console.error("Validation server error:", response.status);
           break;
         }
-
+        
         const data = await response.json();
-
+        
         if (data.status === "success") {
           isValid = !!1;
         } else {
           console.log("Validation not met, retrying...");
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, limit));
         }
       } catch (error) {
         console.error("Error during validation:", error);
         break;
       }
-
+      
       attempts++;
     }
   }
-
+  
   if (isValid) {
     return NextResponse.next();
   } else {
-    return new NextResponse("Access denied", { status: 403 });
+    return new NextResponse("Access denied", {status: 403});
   }
 }
 
