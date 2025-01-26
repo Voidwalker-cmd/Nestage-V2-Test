@@ -43,7 +43,7 @@ export async function middleware(req: NextRequest) {
     proceed = !!0;
     isValid = !!1;
   } else if (host.includes("testing")) {
-    pingUrl = "https://prev-api.nestage.io:4110/api/v1/ping";
+    pingUrl = "https://prev-api.nestage.io/api/v1/ping";
   }
 
 
