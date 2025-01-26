@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import type {NextRequest} from "next/server";
+import axios from "axios";
 
 // const EXCLUDED_PATHS = ["/api"];
 // const ALLOWED_ORIGINS = [
@@ -49,22 +50,20 @@ export async function middleware(req: NextRequest) {
     pingUrl = "https://prev-api.nestage.io/api/v1/ping";
   }
   
+  
   if (proceed) {
     while (!isValid && attempts < maxAttempts) {
       try {
-        const response = await fetch(pingUrl, {
-          method: "GET",
+        const {data, status} = await axios.get(pingUrl, {
           headers: {
             "Content-Type": "application/json",
           },
         });
         
-        if (!response.ok) {
-          console.error("Validation server error:", response.status);
+        if (status !== 200) {
+          console.error("Validation server error:", status);
           break;
         }
-        
-        const data = await response.json();
         
         if (data.status === "success") {
           isValid = !!1;
@@ -72,15 +71,18 @@ export async function middleware(req: NextRequest) {
           console.log("Validation not met, retrying...");
           await new Promise((resolve) => setTimeout(resolve, limit));
         }
-      } catch (error) {
-        console.error("Error during validation:", error);
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          console.error("Error during validation:", err.response?.status || err.message);
+        } else {
+          console.error("Unexpected error during validation:", (err as Error).message);
+        }
         break;
       }
       
       attempts++;
     }
   }
-  
   if (isValid) {
     return NextResponse.next();
   } else {
