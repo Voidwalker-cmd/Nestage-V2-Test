@@ -1,6 +1,6 @@
 // export const dynamic = "force-static";
-import { ServerAxios } from "@/lib/Axios/server";
-import { type NextRequest } from "next/server";
+import {ServerAxios} from "@/lib/Axios/server";
+import {type NextRequest} from "next/server";
 // import * as T from "@/types";
 // import { getReqestBody } from "@/utils/server";
 
@@ -57,15 +57,13 @@ export async function GET(request: NextRequest) {
 
   // console.log({ result, statusCode });
   // // Create the response
-  const response = new Response(
-    JSON.stringify({ data: result, status: statusCode }),
+  return new Response(
+    JSON.stringify({data: result, status: statusCode}),
     {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
     }
   );
-
-  return response;
   // } catch (err) {
   // const e = (err as Error).message;
   // console.log({e})
@@ -99,14 +97,12 @@ export async function POST(request: NextRequest) {
     result = "Error";
     statusCode = 500;
   }
-
-  const response = new Response(
-    JSON.stringify({ data: result, status: statusCode }),
+  
+  return new Response(
+    JSON.stringify({data: result, status: statusCode}),
     {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
     }
   );
-
-  return response;
 }
