@@ -25,7 +25,6 @@ export async function GET() {
       try {
         // const startTime = Date.now()
         const {data, status} = await axios.get(pingUrl, {
-          timeout: 4999, // 10 seconds timeout for each request
           headers: {
             "Content-Type": "application/json",
           },
