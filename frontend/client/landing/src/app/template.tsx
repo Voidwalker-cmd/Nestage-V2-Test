@@ -4,7 +4,7 @@ import {ThirdwebProvider} from "thirdweb/react";
 import {useEffect, useState} from "react";
 import Preloader from "@/components/molecules/Loader";
 import {saveRef} from "@/functions/saveRef";
-import {refKey} from "@/config";
+import {refKey, SITE_MODE} from "@/config";
 import AuthProvider from "@/context/AuthProvider";
 import axios from "axios";
 
@@ -21,9 +21,9 @@ export default function Template({ children }: { children: React.ReactNode }) {
   
   const PINGSERVER = async () => {
     let pingUrl = "https://api.nestage.io/api/v1/ping"
-    if (process.env.MODE === 'dev') {
+    if (SITE_MODE === 'dev') {
       pingUrl = "http://localhost:1335/api/v1/ping"
-    } else if (process.env.MODE === 'prev') {
+    } else if (SITE_MODE === 'prev') {
       pingUrl = "https://prev-api.nestage.io/api/v1/ping"
     }
     const lastPing = sessionStorage.getItem("lastPing");
