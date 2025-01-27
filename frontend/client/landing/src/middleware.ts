@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
     isValid = true;
     maxAttempts = 2;
     limit = 500;
-  } else if (host.includes("testing")) {
+  } else if (host.includes("v2-test")) {
     pingUrl = "https://prev-api.nestage.io/api/v1/ping";
   }
 
@@ -36,7 +36,7 @@ export async function middleware(req: NextRequest) {
     totalTimeout += initialDelay;
     
     while (!isValid && attempts < maxAttempts && totalTimeout < maxTotalTimeout) {
-      console.log('passed')
+      console.log(`passed - ${attempts}`)
       try {
         const startTime = Date.now();
         const { data, status } = await axios.get(pingUrl, {
