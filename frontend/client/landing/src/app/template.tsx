@@ -6,7 +6,7 @@ import Preloader from "@/components/molecules/Loader";
 import {saveRef} from "@/functions/saveRef";
 import {refKey} from "@/config";
 import AuthProvider from "@/context/AuthProvider";
-import {Axios} from "@/lib/Axios/client"
+import axios from "axios";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
@@ -20,12 +20,18 @@ export default function Template({ children }: { children: React.ReactNode }) {
   };
   
   const PINGSERVER = async () => {
+    let pingUrl = "https://api.nestage.io/api/v1/ping"
+    if (process.env.MODE === 'dev') {
+      pingUrl = "http://localhost:1335/api/v1/ping"
+    } else if (process.env.MODE === 'prev') {
+      pingUrl = "https://prev-api.nestage.io/api/v1/ping"
+    }
     const lastPing = sessionStorage.getItem("lastPing");
     const now = Date.now();
     
-    if (!lastPing || now - parseInt(lastPing, 10) > 15 * 60 * 1000) {
+    if (!lastPing || now - parseInt(lastPing, 10) > 14 * 60 * 1000) {
       try {
-        await Axios.get("/PING");
+        await axios.get(pingUrl);
         sessionStorage.setItem("lastPing", now.toString());
       } catch (error) {
         console.error("PING request failed: ", error);
