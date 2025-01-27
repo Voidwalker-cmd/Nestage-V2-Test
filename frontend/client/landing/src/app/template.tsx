@@ -28,7 +28,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         await Axios.get("/PING");
         sessionStorage.setItem("lastPing", now.toString());
       } catch (error) {
-        console.error("PING request failed:");
+        console.error("PING request failed: ", error);
       }
     }
   }

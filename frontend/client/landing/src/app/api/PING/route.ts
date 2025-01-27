@@ -4,7 +4,7 @@ export async function GET() {
   let isValid = false
   let attempts = 0
   const maxAttempts = 5
-  let limit = 1000 // 1 second between retries
+  const limit = 1000 // 1 second between retries
   let totalTimeout = 0
   
   const maxTotalTimeout = 55000 // 55 seconds, leaving 5 seconds buffer for the 60-second limit
