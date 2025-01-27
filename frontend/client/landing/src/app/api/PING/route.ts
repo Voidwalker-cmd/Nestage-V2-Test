@@ -3,11 +3,11 @@ import axios from 'axios'
 export async function GET() {
   let isValid = false
   let attempts = 0
-  const maxAttempts = 5
-  const limit = 1000 // 1 second between retries
-  let totalTimeout = 0
+  let maxAttempts = 5
+  const limit = 15000 // 1 second between retries
+  // let totalTimeout = 0
   
-  const maxTotalTimeout = 55000 // 55 seconds, leaving 5 seconds buffer for the 60-second limit
+  // const maxTotalTimeout = 9500 // 55 seconds, leaving 5 seconds buffer for the 60-second limit
   
   let pingUrl = "https://api.nestage.io/api/v1/ping"
   
@@ -17,20 +17,21 @@ export async function GET() {
     isValid = true // Skip validation in development
   } else if (process.env.MODE === 'prev') {
     pingUrl = "https://prev-api.nestage.io/api/v1/ping"
+    maxAttempts = 10
   }
   
   if (!isValid) {
-    while (!isValid && attempts < maxAttempts && totalTimeout < maxTotalTimeout) {
+    while (!isValid && attempts < maxAttempts) {
       try {
-        const startTime = Date.now()
+        // const startTime = Date.now()
         const {data, status} = await axios.get(pingUrl, {
-          timeout: 10000, // 10 seconds timeout for each request
+          timeout: 4999, // 10 seconds timeout for each request
           headers: {
             "Content-Type": "application/json",
           },
         })
-        const endTime = Date.now()
-        totalTimeout += (endTime - startTime)
+        // const endTime = Date.now()
+        // totalTimeout += (endTime - startTime)
         
         if (status !== 200) {
           console.error("Validation server error:", status)
@@ -42,7 +43,7 @@ export async function GET() {
         } else {
           console.log("Validation not met, retrying...")
           await new Promise((resolve) => setTimeout(resolve, limit))
-          totalTimeout += limit
+          // totalTimeout += limit
         }
       } catch (err) {
         if (axios.isAxiosError(err)) {
