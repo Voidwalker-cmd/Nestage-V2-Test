@@ -6,6 +6,8 @@ import {NextResponse} from "next/server";
 export async function middleware(req: NextRequest) {
   const { host } = req.nextUrl;
   
+  console.log({host})
+  
   let proceed = true;
   let isValid = false;
   let attempts = 0;
@@ -34,6 +36,7 @@ export async function middleware(req: NextRequest) {
     totalTimeout += initialDelay;
     
     while (!isValid && attempts < maxAttempts && totalTimeout < maxTotalTimeout) {
+      console.log('passed')
       try {
         const startTime = Date.now();
         const { data, status } = await axios.get(pingUrl, {
