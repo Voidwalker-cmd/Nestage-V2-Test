@@ -39,6 +39,7 @@ export async function middleware(req: NextRequest) {
       console.log(`passed - ${attempts}`)
       try {
         const startTime = Date.now();
+        // hello
         const { data, status } = await axios.get(pingUrl, {
           timeout: 10000, // 10 seconds timeout for each request
           headers: {
