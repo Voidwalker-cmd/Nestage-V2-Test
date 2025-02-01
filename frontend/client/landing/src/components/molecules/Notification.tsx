@@ -29,11 +29,12 @@ const Notification = () => {
   const [modalOpen, setModalOpen] = useState(false);
   
   const Filter = (uuid: string, index: number | string) => {
-    let n = min, m = max, updatedArray: T.Notification[] = [], p = !!1
+    let n = min, m = max, p = !!1;
+    const updatedArray: T.Notification[] = []
     const l = first.length
     const rawArray = first.filter(obj => obj.uuid !== uuid);
     for (let j = 0; j < rawArray.length; j++) {
-      const {id, ...rest} = rawArray[j]
+      const {...rest} = rawArray[j]
       updatedArray.push({...rest, id: j + 1})
     }
     const u = updatedArray.length
@@ -65,11 +66,11 @@ const Notification = () => {
   }
   
   useEffect(() => {
-    address && setAddress(address)
+    if (address) setAddress(address)
   }, [address])
   
   useEffect(() => {
-    notifications && setFirst(notifications)
+    if (notifications) setFirst(notifications)
   }, [notifications])
   
   const setToEmpty = () => {
@@ -109,7 +110,7 @@ const Notification = () => {
   }
   
   useEffect(() => {
-    first.length && Cut()
+    if (first.length) Cut()
   }, [first])
   
   return (
