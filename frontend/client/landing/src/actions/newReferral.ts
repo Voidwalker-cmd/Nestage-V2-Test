@@ -174,7 +174,7 @@ export const newReferral = async (form: T.refData) => {
             })();
           }
           
-          const lx: string[] = info![0];
+          const lx = info![0];
           const len = lx.length;
           if (len > 0) {
             for (let i = 0; i < len; i++) {
