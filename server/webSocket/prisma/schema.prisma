@@ -1,0 +1,106 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id        Int            @id @default(autoincrement())
+  username  String         @unique
+  password  String
+  active    Boolean        @default(true)
+  lastLogin DateTime       @default(now())
+  wallet    AdminAddress[]
+}
+
+model AdminAddress {
+  id      Int     @id @default(autoincrement())
+  adminId Int
+  type    String
+  address String  @unique
+  active  Boolean @default(true)
+  admin   Admin   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Staker {
+  id   Int    @id @default(autoincrement())
+  uuid String @unique @default(uuid())
+}
+
+model User {
+  id               Int                @id @default(autoincrement())
+  uuid             String             @unique @default(uuid())
+  walletId         String             @unique
+  referralCode     String             @unique
+  UserNotification UserNotification[]
+  Points           Points[]
+  Notification           Notification[]
+}
+
+model Referral {
+  id       Int        @id @default(autoincrement())
+  address  String     @unique
+  code     String     @unique
+  uplinkId Int?
+  uplink   Referral?  @relation("UplinkChild", fields: [uplinkId], references: [id])
+  children Referral[] @relation("UplinkChild")
+}
+
+model Referralw {
+  id       Int         @id @default(autoincrement())
+  address  String      @unique
+  code     String      @unique
+  uplinkId Int?
+  uplink   Referralw?  @relation("UplinkChild", fields: [uplinkId], references: [id])
+  children Referralw[] @relation("UplinkChild")
+}
+
+model ReferralPayout {
+  id      Int    @id @default(autoincrement())
+  address String
+  amount  String
+}
+
+model LevelOne {
+  id        Int      @id @default(autoincrement())
+  amount    String
+  createdAt DateTime @default(now())
+}
+
+model LevelTwo {
+  id        Int      @id @default(autoincrement())
+  amount    String
+  createdAt DateTime @default(now())
+}
+
+model UserNotification {
+  id        Int      @id @default(autoincrement())
+  type      String
+  title     String
+  text      String
+  user      User     @relation(fields: [userUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  userUuid  String
+  createdAt DateTime @default(now())
+}
+
+model Points {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  userUuid  String
+  point     Int      @default(0)
+  type      String
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  title     String
+  message      String
+  isRead Boolean @default(false)
+  user      User     @relation(fields: [userUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  userUuid  String
+  createdAt DateTime @default(now())
+}

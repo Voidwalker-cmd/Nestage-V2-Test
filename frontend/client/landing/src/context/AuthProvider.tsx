@@ -8,16 +8,17 @@ import {Wallet} from 'thirdweb/wallets';
 import Preloader from '@/components/molecules/Loader';
 // import { CLIENT_ID } from "@/config";
 import {createThirdwebClient} from "thirdweb";
-import {useGetStakers} from "@/hooks/useWeb3";
 import {searchStringInArray} from "@/functions";
 import {getReferrals} from "@/actions";
 import {useWeb3Store} from "@/store";
+import {useGetStakers} from "@/hooks/useWeb3";
 
 export const client = createThirdwebClient({
   clientId: "520d55c9ed1eb0dc52af37d81000ce76",
 });
 
 const AuthProvider = ({children}: { children: React.ReactNode }) => {
+  const stakerList = useGetStakers()
   const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
   const setUserAddress = useWeb3Store((state) => state.setAddress);
   
@@ -30,7 +31,6 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(!!1);
   const [isClient, setIsClient] = useState(!!0);
   
-  const stakerList = useGetStakers();
   
   const {data: autoConnected, isLoading: isLoaded} = useAutoConnect({
     client,
@@ -39,7 +39,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
       setAddress(address);
     },
     timeout: 3000,
-    onTimeout: () => router.push("/")
+    onTimeout: () => router.refresh()
   });
   
   const initY = async () => {
@@ -88,7 +88,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
         return
       }
       
-      if (path && address && autoConnected) {
+      if (path && address) {
         if (path !== address) {
           if (status === "connected") {
             const hasStake = await initY()
@@ -114,7 +114,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
       } else {
         if (path && status !== "connected") {
           if (status === "connecting") {
-          } else {
+          } else if (status === "disconnected") {
             router.push("/");
           }
         } else {

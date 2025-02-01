@@ -1,24 +1,25 @@
 "use client";
 
-import { BookOpenText, Home, ChartCandlestick, Megaphone, Settings } from "lucide-react"
+import {BookOpenText, ChartCandlestick, Home, Megaphone, Settings} from "lucide-react"
 
 import {
     Sidebar,
-    SidebarHeader,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarFooter,
+    useSidebar,
 } from "@/components/ui/sidebar"
-import { useSidebar } from "@/components/ui/sidebar"
 
 import Image from "next/image"
-import { Static } from "@/assets/image"
-import { SocialIcon } from "@/components/atoms/Icons"
+import {Static} from "@/assets/image"
+import {SocialIcon} from "@/components/atoms/Icons"
+import {Points} from "@/components/molecules/Points";
 
 // Menu items.
 const items = [
@@ -65,7 +66,7 @@ export function AppSidebar() {
             <SidebarContent>
                 <SidebarGroup className="!flex justify-center !w-full lg:!hidden">
                     <SidebarGroupLabel>
-                        <p className="darkModeText font-semibold text-lg !text-black">1,234,567,890 pts</p>
+                        <p className="darkModeText font-semibold text-lg !text-black"><Points/></p>
                     </SidebarGroupLabel>
                 </SidebarGroup>
                 <SidebarGroup>

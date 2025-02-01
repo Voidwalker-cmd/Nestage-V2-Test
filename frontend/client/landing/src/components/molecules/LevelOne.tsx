@@ -2,13 +2,13 @@
 
 import {useEffect, useState} from "react";
 import * as T from "@/types";
-import {SITE_MODE, refKey} from '@/config';
+import {refKey, SITE_MODE} from '@/config';
 import {Input} from "../ui/input";
 import {Label} from "../ui/label";
 import {Button} from "../ui/button";
 import {useWeb3Store} from "@/store";
 import {djs, Formatter, shortenHexString, uuid} from "@/utils";
-import {useBNB, getBUSD} from "@/hooks/useBalance";
+import {getBUSD, useBNB} from "@/hooks/useBalance";
 import RightSide from "./RightSide";
 import {newStake} from "@/actions/newStake";
 import {SiteUrl} from "@/functions/site";
@@ -94,7 +94,8 @@ const LevelOne = ({setStage}: T.ModalProps) => {
       profit: p,
       planId: 0,
       uuid,
-      address
+      address,
+      place: "modal",
     };
     setLoading(!!1)
     const res = await newStake(send)

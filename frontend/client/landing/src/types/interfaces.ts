@@ -1,5 +1,5 @@
-import { BigNumberish } from "ethers";
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import {BigNumberish} from "ethers";
+import {Dispatch, ReactNode, SetStateAction} from "react";
 
 export interface IconProps {
   className?: string;
@@ -56,10 +56,12 @@ export interface MiningResult {
   status: string;
   message: string;
 }
+
 export interface refData {
   referral?: string;
   amount: string;
   address: string;
+  place: string;
 }
 
 export interface ModalProps {
@@ -86,6 +88,7 @@ export interface StakingData {
   endDate: string;
   profit: string;
   address: string;
+  place: string;
 }
 
 export interface payUpline {
@@ -119,26 +122,22 @@ export interface getRefResponse {
   downlines: Downline;
 }
 
-export interface getRefResponse {
-  id: number;
-  address: string;
-  code: string;
-  uplinkId: number;
-  uplineCode: string | null;
-  userID: number;
-  upline: number;
-  uplines: Array<Upline> | [];
-  downlines: Downline;
-}
-
 export interface getRefByCodeResponse
   extends Omit<getRefResponse, "downlines"> {
   additionalProperty?: string;
 }
 
+export interface getSelfRefResponse extends getRefResponse {
+  points: number
+}
+
 export interface AuthStore {
   isAuth: boolean;
+  stakers: ParsedStakersData[] | []
+  user: getSelfRefResponse;
   setIsAuth: (isAuth: boolean) => void;
+  setUser: (user: getSelfRefResponse) => void;
+  setStakers: (stakers: ParsedStakersData[]) => void;
 }
 
 export interface bscScan {
@@ -150,7 +149,7 @@ export interface bscScan {
     };
   };
   status: number
-};
+}
 
 
 export interface getAdminAddressResponse {
@@ -171,9 +170,35 @@ export interface getAdminAddressResponse {
     };
   };
   status: number;
-} 
+}
 
 export interface createRefParams {
   address: string;
   code?: string;
+}
+
+export type Notification = {
+  id: number;
+  uuid: string;
+  title: string;
+  message: string;
+};
+
+export interface NotificationState {
+  notifications: Notification[];
+  address: string | null;
+  socket: WebSocket | null;
+  
+  setNotifications: (notifications: Notification[]) => void;
+  setAddress: (address: string) => void;
+  setSocket: (socket: WebSocket) => void
+  markAsRead: (uuid: string) => void;
+}
+
+export type Investment = {
+  id: number
+  amount: string
+  startDate: number
+  endDate: number
+  profit: string
 }

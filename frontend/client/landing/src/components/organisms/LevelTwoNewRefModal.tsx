@@ -1,29 +1,36 @@
-"use client";
+"use client"
 
-import {useEffect, useState} from "react";
-import * as T from "@/types";
-import {Button} from "../ui/button";
+import {Button} from "@/components/ui/button"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {useRouter} from "next/navigation";
 import {useWeb3Store} from "@/store";
-import {Formatter, shortenHexString} from "@/utils";
 import {getBUSD, useBNB} from "@/hooks/useBalance";
-import RightSide from "./RightSide";
 import {refKey, SITE_MODE} from "@/config";
-import {signal} from "@preact/signals-react";
-import {Loader2} from "lucide-react";
-import {useRouter} from 'next/navigation';
+import {useEffect, useState} from "react";
 import {newReferral} from "@/actions/newReferral";
+import {Formatter, shortenHexString} from "@/utils";
 import CopyBtn from "@/components/molecules/CopyBtn";
+import {Loader2} from "lucide-react";
+import {signal} from "@preact/signals-react";
 
-export const btnStateTwo = signal("Initializing");
+export const btnStateTwoModal = signal("Initializing");
 
-const LevelOne = ({setStage}: T.ModalProps) => {
+const LevelTwoNewRefModal = () => {
   const router = useRouter();
   const address = useWeb3Store((state) => state.address);
   const {balance, symbol} = useBNB(address);
   
   const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 1 : 5;
   
-  const [bal, setBal] = useState<number | string>(0);
   const [busd, setBusd] = useState<number | string>(0);
   const [lowBUSD, setLowBUSD] = useState<boolean>(!!0);
   const [lowBNB, setLowBNB] = useState<boolean>(!!0);
@@ -41,12 +48,12 @@ const LevelOne = ({setStage}: T.ModalProps) => {
   }, [])
   
   const checkLowBalance = () => {
-    if (Number(bal) < minAllow) {
+    if (Number(busd) < minAllow) {
       setLowBUSD(!!1)
     } else {
       setLowBUSD(!!0);
     }
-    if (Number(busd) < minAllow) {
+    if (Number(balance) === 0) {
       setLowBNB(!!1)
     } else {
       setLowBNB(!!0);
@@ -85,33 +92,25 @@ const LevelOne = ({setStage}: T.ModalProps) => {
       setLoading(!!0)
       // setDisabled(!!0)
       setErr(res.errorMessage!);
-      btnStateTwo.value = "Initializing"
+      btnStateTwoModal.value = "Initializing"
       return;
     } else {
-      btnStateTwo.value = "Redirecting"
+      btnStateTwoModal.value = "Redirecting"
       // setLoading(!!0)
-      router.push(`/user/${address}`)
+      router.refresh()
     }
   }
   
   useEffect(() => {
     checkLowBalance();
-  }, [bal, busd]);
+  }, [balance, busd]);
   
-  useEffect(() => {
-    if (balance) {
-      // setBal(100);
-      setBal(balance);
-    }
-  }, [balance]);
-  
-  useEffect(() => {
-    const fetchBusd = async () => {
-      const {balance} = await getBUSD(address);
-      setBusd(balance);
-    };
-    fetchBusd();
-  }, [address]);
+  // useEffect(() => {
+  //   if (balance) {
+  //     // setBal(100);
+  //     setBal(balance);
+  //   }
+  // }, [balance]);
   
   useEffect(() => {
     const fetchBusd = async () => {
@@ -120,20 +119,34 @@ const LevelOne = ({setStage}: T.ModalProps) => {
     };
     fetchBusd();
   }, [address]);
+  
+  const ResetStates = () => {
+    // setBal(0);
+    setBusd(0);
+    setLowBUSD(!!0);
+    setLowBNB(!!0);
+    setLoading(!!0);
+    setHasErr(!!0)
+    setErr("")
+  }
+  
+  // useEffect(() => {
+  //   !loaded && ResetStates()
+  // }, []);
   
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center p-6 space-y-6 md:space-y-0 md:space-x-6">
-      {/* Left Section */}
-      <div className="w-full md:w-2/5 p-6 rounded-lg shadow-lg text-white">
-        <h1 className="text-xl font-bold mb-4">Level 2 Decentralized Matrix.</h1>
-        
-        <div className="py-5">
-          {refCode !== "" ? (
-            <div className="mb-2">
-              <p className="block text-sm font-semibold mb-1 text-center py-2">Upline</p>
-              <div className="w-full px-4 py-2 rounded-lg bg-gray-500 flex justify-center font-medium">{refCode}</div>
-            </div>) : ("")}
-          
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="w-2/5 lg:!w-1/5">Activate</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] !bg-accent">
+        <DialogHeader>
+          <DialogTitle>Activate Level 2 Decentralized Matrix</DialogTitle>
+          <DialogDescription>
+            Activate to get your referral code/link and start referring users to earn.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="py-4">
           <div className="mb-2 flex items-center justify-start gap-2">
             <label className="block text-sm font-medium mb-1">Wallet address:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2 gap-3">
@@ -156,7 +169,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
                 <span className="px-0.5 hidden lg:inline"> | </span>
                 <span>
                     <span className="pr-0.5">{symbol}</span>
-                  {Formatter(bal, {
+                  {Formatter(balance!, {
                     type: "d",
                     decimalOptions: {n: 4, m: 8},
                   })}
@@ -166,39 +179,27 @@ const LevelOne = ({setStage}: T.ModalProps) => {
           </div>
           
           {hasErr && <span className="py-2 text-sm text-red-500 italic">{err}</span>}
-          
-          <div className="flex items-center justify-between py-5">
-            <Button
-              onClick={() => setStage(0)}
-              className="px-4 py-2 rounded-full bg-gray-300 text-black font-semibold hover:bg-gray-400"
-            >
-              Back
-            </Button>
-            {loading ? (
-              <Button
-                disabled={!!1}
-                className="px-4 py-2 rounded-full bg-green-800 text-white font-semibold hover:bg-green-700 cursor-not-allowed flex justify-center items-center gap-2"
-              >
-                <Loader2 className="h-3 w-3 animate-spin"/>
-                {btnStateTwo}
+        </div>
+        <DialogFooter>
+          <div className="flex justify-between items-center w-full">
+            <DialogClose asChild>
+              <Button onClick={ResetStates} className="setBtn !border !border-gray-500" variant="secondary">
+                Close
               </Button>
+            </DialogClose>
+            {!loading ? (
+              <Button onClick={StartReferral}>Pay ${minAllow}</Button>
             ) : (
-              <Button
-                onClick={StartReferral}
-                disabled={lowBUSD || lowBNB}
-                className="px-4 py-2 rounded-full bg-green-900 text-white font-semibold hover:bg-green-800"
-              >
-                Register
+              <Button disabled>
+                <Loader2 className="animate-spin"/>
+                {btnStateTwoModal.value}
               </Button>
             )}
           </div>
-        </div>
-      </div>
-      
-      {/* Right Section */}
-      <RightSide/>
-    </div>
-  );
-};
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
-export default LevelOne;
+export default LevelTwoNewRefModal
