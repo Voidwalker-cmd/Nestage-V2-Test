@@ -48,7 +48,7 @@ const ReferralStats: FC<{ user: T.getSelfRefResponse }> = ({user}) => {
             <h2 className="text-2xl font-bold">Your Referral Stats</h2>
           </CardHeader>
           <CardDescription className="!text-center !mb-6 !flex flex-col !justify-center !items-center gap-3">
-            <span className="italic font-bold">You haven't referred any users yet.</span>
+            <span className="italic font-bold">{`You haven't referred any users yet.`}</span>
             <span className="italic">You have to Activate Level Two to get your Referral Code/Link.</span>
             <LevelTwoNewRefModal/>
           </CardDescription>

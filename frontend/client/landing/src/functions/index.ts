@@ -15,7 +15,7 @@ export const getProfit = async (
 ) => {
   let result: T.ParsedStakersData[] | [] = []
   if (array.length) {
-    let result = array.filter((obj: T.ParsedStakersData) => obj.staker === searchString);
+    result = array.filter((obj: T.ParsedStakersData) => obj.staker === searchString);
     result = await Promise.all(
       result.map(async (x: T.ParsedStakersData, i: number) => {
         // const resa = await Helper.convertToUSD("BNB", x.amount);
@@ -37,7 +37,7 @@ export const getLevelOne = (
   array: T.ParsedStakersData[],
   searchString: string
 ) => {
-  let result: T.Investment[] = []
+  const result: T.Investment[] = []
   if (array.length) {
     const x = array.filter((obj: T.ParsedStakersData) => obj.staker === searchString);
     

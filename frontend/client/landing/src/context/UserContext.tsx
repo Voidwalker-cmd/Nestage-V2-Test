@@ -13,7 +13,7 @@ const UserContext = ({children}: { children: React.ReactNode }) => {
   }
   
   useEffect(() => {
-    address && getUserInfo()
+    if (address) getUserInfo()
   }, [address]);
   
   return (
