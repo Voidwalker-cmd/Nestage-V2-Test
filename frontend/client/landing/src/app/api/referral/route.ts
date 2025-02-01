@@ -7,10 +7,11 @@ import {type NextRequest} from "next/server";
 export async function GET(request: NextRequest) {
   //   const data = await getReqestBody(request);
   const address = request.nextUrl.searchParams.get("address");
-  const withcode = request.nextUrl.searchParams.get("withcode");
+  const withCode = request.nextUrl.searchParams.get("withcode");
   const refCode = request.nextUrl.searchParams.get("ref");
-
-  console.log({ withcode, address, refCode });
+  const mode = request.nextUrl.searchParams.get("mode");
+  
+  // console.log({ withCode, address, refCode });
 
   // try {
   let result, statusCode;
@@ -27,10 +28,10 @@ export async function GET(request: NextRequest) {
       result = "Not found";
       statusCode = 404;
     }
-  } else if (withcode !== null) {
+  } else if (withCode !== null) {
     try {
       const { data: d, status: s } = await ServerAxios.get(
-        `g-referral?code=${withcode}`
+        `g-referral?code=${withCode}`
       );
       result = d;
       statusCode = s;
@@ -52,6 +53,34 @@ export async function GET(request: NextRequest) {
       console.log({e})
       result = "No referral found";
       statusCode = 404;
+    }
+  } else if (mode !== null) {
+    if (mode === 'pay') {
+      try {
+        const {data, status} = await ServerAxios.get(
+          `referral/pay?address=${address}`
+        );
+        result = data.total;
+        statusCode = status;
+      } catch (err) {
+        const e = (err as Error).message;
+        console.log({e})
+        result = "No Address found";
+        statusCode = 404;
+      }
+    } else if (mode === "getRef") {
+      try {
+        const {data, status} = await ServerAxios.get(
+          `get-referral?ref=${address}`
+        );
+        result = data;
+        statusCode = status;
+      } catch (err) {
+        const e = (err as Error).message;
+        console.log({e})
+        result = "No Address found";
+        statusCode = 404;
+      }
     }
   }
 

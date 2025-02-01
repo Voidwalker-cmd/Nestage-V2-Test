@@ -4,9 +4,8 @@ import {ThirdwebProvider} from "thirdweb/react";
 import {useEffect, useState} from "react";
 import Preloader from "@/components/molecules/Loader";
 import {saveRef} from "@/functions/saveRef";
-import {refKey, SITE_MODE} from "@/config";
+import {refKey} from "@/config";
 import AuthProvider from "@/context/AuthProvider";
-import axios from "axios";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
@@ -14,34 +13,33 @@ export default function Template({ children }: { children: React.ReactNode }) {
   const SaveRef = async (ref: string) => {
     const { data, status } = await saveRef(ref);
     if (status === 200) {
-      console.log({ data });
       localStorage.setItem(refKey, data);
     }
   };
   
-  const PINGSERVER = async () => {
-    let pingUrl = "https://api.nestage.io/api/v1/ping"
-    if (SITE_MODE === 'dev') {
-      pingUrl = "http://localhost:1335/api/v1/ping"
-    } else if (SITE_MODE === 'prev') {
-      pingUrl = "https://prev-api.nestage.io/api/v1/ping"
-    }
-    const lastPing = sessionStorage.getItem("lastPing");
-    const now = Date.now();
-    
-    if (!lastPing || now - parseInt(lastPing, 10) > 14 * 60 * 1000) {
-      try {
-        await axios.get(pingUrl);
-        sessionStorage.setItem("lastPing", now.toString());
-      } catch (error) {
-        console.error("PING request failed: ", error);
-      }
-    }
-  }
-  
-  useEffect(() => {
-    PINGSERVER()
-  }, [])
+  // const PINGSERVER = async () => {
+  //   let pingUrl = "https://api.nestage.io/api/v1/ping"
+  //   if (SITE_MODE === 'dev') {
+  //     pingUrl = "http://localhost:1335/api/v1/ping"
+  //   } else if (SITE_MODE === 'prev') {
+  //     pingUrl = "https://prev-api.nestage.io/api/v1/ping"
+  //   }
+  //   const lastPing = sessionStorage.getItem("lastPing");
+  //   const now = Date.now();
+  //
+  //   if (!lastPing || now - parseInt(lastPing, 10) > 14 * 60 * 1000) {
+  //     try {
+  //       await axios.get(pingUrl);
+  //       sessionStorage.setItem("lastPing", now.toString());
+  //     } catch (error) {
+  //       console.error("PING request failed: ", error);
+  //     }
+  //   }
+  // }
+  //
+  // useEffect(() => {
+  //   PINGSERVER()
+  // }, [])
 
   useEffect(() => {
     if (isClient) {
@@ -63,12 +61,12 @@ export default function Template({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div>
+    <>
       <ThirdwebProvider>
         <AuthProvider>
           {children}
         </AuthProvider>
       </ThirdwebProvider>
-    </div>
+    </>
   );
 }

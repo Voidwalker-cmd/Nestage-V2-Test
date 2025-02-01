@@ -2,22 +2,21 @@
 
 // import { useWeb3Store } from "@/store";
 import * as T from "../types";
-import { units } from "@/lib";
-import { toBigInt } from "ethers";
-import { bsc, bscTestnet } from "thirdweb/chains";
-import { getContract } from "thirdweb";
-import { client } from "@/components/molecules/ConnectWallet";
-import { NETWORK_MODE, nestageAddress } from "@/config";
-import { useReadContract } from "thirdweb/react";
+import {units} from "@/lib";
+import {toBigInt} from "ethers";
+import {bsc, bscTestnet} from "thirdweb/chains";
+import {getContract} from "thirdweb";
+import {client} from "@/components/molecules/ConnectWallet";
+import {nestageAddress, NETWORK_MODE} from "@/config";
+import {useReadContract} from "thirdweb/react";
+// import {useAuthStore} from "@/store/auth";
 
-export const useGetStakers = (): T.ParsedStakersData[] => {
-  const activeChainT = bscTestnet;
-  const activeChainM = bsc;
-
+export const useGetStakers = (): T.ParsedStakersData[] | [] => {
+  // // const setStakers = useAuthStore((state) => state.setStakers)
   const contract = getContract({
     client: client,
     address: nestageAddress!,
-    chain: NETWORK_MODE === "mainnet" ? activeChainM : activeChainT,
+    chain: NETWORK_MODE === "mainnet" ? bsc : bscTestnet,
   });
   // const stakers: T.stakersData[] = await contract?.call("getAllStakes");
 
@@ -30,7 +29,7 @@ export const useGetStakers = (): T.ParsedStakersData[] => {
 
   
   try {
-    const parsedStakers = stakers?.map(
+    const parsedStakers: T.ParsedStakersData[] | undefined = stakers?.map(
       (staker): T.ParsedStakersData => ({
         staker: staker.staker,
         amount: units(staker.amount, "ether"),
@@ -39,12 +38,13 @@ export const useGetStakers = (): T.ParsedStakersData[] => {
         profit: units(staker.profit, "ether"),
       })
     );
-
+    // setStakers(parsedStakers || [])
     return parsedStakers || [];
   } catch (error) {
     console.log(error);
     //   dispatch(setCheckState({ state: "not-found" }));
-    return [];
+    // setStakers([])
+    return []
   }
 };
 
