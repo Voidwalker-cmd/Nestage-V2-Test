@@ -52,7 +52,7 @@ export const newReferral = async (form: T.refData) => {
   
   try {
     let info;
-    const createNewRef = !!1;
+    const createNewRef = !!1
     
     if (refCode) {
       // const refs = await dispatch(getRefByCode({ code: refCode }));
