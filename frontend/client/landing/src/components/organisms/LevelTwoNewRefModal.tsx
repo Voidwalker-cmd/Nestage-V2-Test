@@ -29,7 +29,7 @@ const LevelTwoNewRefModal = () => {
   const router = useRouter();
   const addr = useWeb3Store((state) => state.address);
   const activeAccount = useActiveAccount();
-  const [address] = useState(() => addr ?? activeAccount?.address ?? "");
+  const [address, setAddress] = useState(() => addr ?? activeAccount?.address ?? "");
   
   const {balance, symbol: sym, isError, isLoading} = useBNB(address);
   
@@ -52,7 +52,10 @@ const LevelTwoNewRefModal = () => {
     if (ref) {
       setRefCode(ref)
     }
-  }, [])
+       if (!addr && activeAccount?.address) {
+        setAddress(activeAccount.address);
+    }
+}, [activeAccount]);
   
   useEffect(() => {
     setBnb(balance);  // Always a valid number (default 0)
