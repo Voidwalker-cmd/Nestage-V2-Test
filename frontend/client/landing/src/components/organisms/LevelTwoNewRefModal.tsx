@@ -40,7 +40,7 @@ const LevelTwoNewRefModal = () => {
   
   const [busd, setBusd] = useState<number | string>(0)
   const [lowBUSD, setLowBUSD] = useState<boolean>(!!0);
-  const [lowBNB, setLowBNB] = useState<boolean>(!!0);
+  const [lowBNB, setLowBNB] = useState<boolean>(!!0)
   const [loading, setLoading] = useState<boolean>(!!0);
   const [hasErr, setHasErr] = useState<boolean>(!!0)
   const [err, setErr] = useState<string>("")
