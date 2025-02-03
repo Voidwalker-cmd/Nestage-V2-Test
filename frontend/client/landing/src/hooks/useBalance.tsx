@@ -19,18 +19,20 @@ export const useBNB = (walletAddress: string) => {
 }
 
 export const getBUSD = async (walletAddress: string) => {
-    let bal, err
-        if (window.ethereum) {
-            const provider = new BrowserProvider(window.ethereum);
-            try {
-                const signer = await provider.getSigner();
-                const busdContract = new Contract(nestageAddress!, BUSD_ABI, signer);
-
-                bal = await busdContract.getBalance(walletAddress);
-            } catch (error) {
-                console.error("Error fetching BUSD balance:", error);
-                err = `Error fetching BUSD balance: ${error}`
-            }
+    let bal: bigint = BigInt(0), err: string | null = null;
+    
+    if (window.ethereum) {
+        const provider = new BrowserProvider(window.ethereum);
+        try {
+            const signer = await provider.getSigner();
+            const busdContract = new Contract(nestageAddress!, BUSD_ABI, signer);
+            
+            bal = await busdContract.getBalance(walletAddress);
+        } catch (error) {
+            console.error("Error fetching BUSD balance:", error);
+            err = `Error fetching BUSD balance: ${error}`;
         }
-    return { balance: formatUnits(bal, "ether"), error: err }
-    };
+    }
+    
+    return {balance: formatUnits(bal || BigInt(0), "ether"), error: err};
+};

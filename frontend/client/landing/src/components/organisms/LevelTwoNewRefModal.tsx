@@ -21,13 +21,20 @@ import {Formatter, shortenHexString} from "@/utils";
 import CopyBtn from "@/components/molecules/CopyBtn";
 import {Loader2} from "lucide-react";
 import {signal} from "@preact/signals-react";
+import {useActiveAccount} from "thirdweb/react";
 
 export const btnStateTwoModal = signal("Initializing");
 
 const LevelTwoNewRefModal = () => {
   const router = useRouter();
-  const address = useWeb3Store((state) => state.address);
-  const {balance, symbol} = useBNB(address);
+  const addr = useWeb3Store((state) => state.address);
+  const activeAccount = useActiveAccount();
+  const [address] = useState(addr || activeAccount?.address!)
+  
+  const {balance, symbol: sym, isError, isLoading} = useBNB(address);
+  
+  const [bnb, setBnb] = useState<string | number>(0)
+  const [symbol, setSymbol] = useState("")
   
   const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 1 : 5;
   
@@ -47,13 +54,26 @@ const LevelTwoNewRefModal = () => {
     }
   }, [])
   
+  useEffect(() => {
+    setBnb(balance || 0)
+    setSymbol(sym || "bnb")
+  }, [balance, isError, isLoading])
+  
+  // useEffect(() => {
+  //   if(address) {
+  //     const {balance, symbol } = getBNB(address)
+  //     setBnb(balance!)
+  //     setSymbol(symbol!)
+  //   }
+  // }, [address]);
+  
   const checkLowBalance = () => {
     if (Number(busd) < minAllow) {
       setLowBUSD(!!1)
     } else {
       setLowBUSD(!!0);
     }
-    if (Number(balance) === 0) {
+    if (Number(bnb) === 0) {
       setLowBNB(!!1)
     } else {
       setLowBNB(!!0);
@@ -103,7 +123,7 @@ const LevelTwoNewRefModal = () => {
   
   useEffect(() => {
     checkLowBalance();
-  }, [balance, busd]);
+  }, [bnb, busd]);
   
   // useEffect(() => {
   //   if (balance) {
@@ -169,7 +189,7 @@ const LevelTwoNewRefModal = () => {
                 <span className="px-0.5 hidden lg:inline"> | </span>
                 <span>
                     <span className="pr-0.5">{symbol}</span>
-                  {Formatter(balance!, {
+                  {Formatter(bnb, {
                     type: "d",
                     decimalOptions: {n: 4, m: 8},
                   })}
