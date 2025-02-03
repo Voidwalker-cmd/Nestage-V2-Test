@@ -12,7 +12,7 @@ export const useBNB = (walletAddress: string) => {
         client: client,
         address: walletAddress,
         chain: NETWORK_MODE === "mainnet" ? bsc : bscTestnet,
-    });
+    })
     
     return {
         balance: data?.displayValue ?? 0,
