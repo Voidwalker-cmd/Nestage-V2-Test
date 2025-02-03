@@ -48,6 +48,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   const [loading, setLoading] = useState(!!1)
   const [addr, setAddr] = useState("");
   const [navigating, setNavigating] = useState(!!0);
+  const [auto, setAuto] = useState(!!1);
   
   // const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
   // const [isLoading, setIsLoading] = useState(!!1);
@@ -151,23 +152,25 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   }
   
   const Wallet = async () => {
-    if (status === "connected" && !navigating && !pathName.includes("/user")) {
-      const ad = activeAccount?.address || addr;
-      
-      setIsAuth(false);
-      setLoading(true);
-      setAuth(true);
-      await checkAuth(ad)
-    } else if (status === "connecting") {
-      setIsAuth(true);
-      setIsRouting(true);
-      // if(pathName.includes("user"))
-    } else if (pathName.includes("user")) {
-      // const ad = activeAccount?.address!;
-      // await checkAuth(ad)
-      // setTimeout(() => {
-      //   router.replace(`/`);
-      // }, 0);
+    if (auto) {
+      if (status === "connected" && !navigating && !pathName.includes("/user")) {
+        const ad = activeAccount?.address ?? addr;
+        
+        setIsAuth(false);
+        setLoading(true);
+        setAuth(true);
+        await checkAuth(ad)
+      } else if (status === "connecting") {
+        setIsAuth(true);
+        setIsRouting(true);
+        // if(pathName.includes("user"))
+      } else if (pathName.includes("user")) {
+        // const ad = activeAccount?.address!;
+        // await checkAuth(ad)
+        // setTimeout(() => {
+        //   router.replace(`/`);
+        // }, 0);
+      }
     }
   }
   
@@ -300,6 +303,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
             manageWallet: {allowLinkingProfiles: !!0}
           }}
           onConnect={async (wallet) => {
+            setAuto(!!0)
             const address = wallet.getAccount()?.address || "";
             setAddress(address);
             setAddr(address);
