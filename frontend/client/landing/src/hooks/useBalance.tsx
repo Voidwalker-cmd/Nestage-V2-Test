@@ -13,10 +13,15 @@ export const useBNB = (walletAddress: string) => {
         address: walletAddress,
         chain: NETWORK_MODE === "mainnet" ? bsc : bscTestnet,
     });
-
     
-    return { balance: data?.displayValue, symbol: data?.symbol, isLoading, isError }
-}
+    return {
+        balance: data?.displayValue ?? 0,
+        symbol: data?.symbol ?? "bnb",
+        isLoading,
+        isError
+    };
+};
+
 
 export const getBUSD = async (walletAddress: string) => {
     let bal: bigint = BigInt(0), err: string | null = null;
