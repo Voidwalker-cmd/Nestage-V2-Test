@@ -55,9 +55,10 @@ const LevelTwoNewRefModal = () => {
   }, [])
   
   useEffect(() => {
-    setBnb(balance || 0)
-    setSymbol(sym || "bnb")
-  }, [balance, isError, isLoading])
+    setBnb(balance);
+    setSymbol(sym);
+  }, [balance, sym, isError, isLoading]);
+
   
   // useEffect(() => {
   //   if(address) {
