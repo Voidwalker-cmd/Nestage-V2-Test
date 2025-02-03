@@ -38,7 +38,7 @@ const LevelTwoNewRefModal = () => {
   
   const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 1 : 5;
   
-  const [busd, setBusd] = useState<number | string>(0);
+  const [busd, setBusd] = useState<number | string>(0)
   const [lowBUSD, setLowBUSD] = useState<boolean>(!!0);
   const [lowBNB, setLowBNB] = useState<boolean>(!!0);
   const [loading, setLoading] = useState<boolean>(!!0);
