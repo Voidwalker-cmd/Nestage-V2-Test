@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import {useNotificationStore} from "@/store/notifications";
 import {SITE_MODE} from "@/config";
 
-const WS_URL = SITE_MODE === 'dev' ? "ws://localhost:1335" : SITE_MODE === 'prev' ? "ws://prev-api.nestage.io:1335" : "ws://api.nestage.io:1335";
+const WS_URL = SITE_MODE === 'dev' ? "ws://localhost:1335" : SITE_MODE === 'prev' ? "wss://prev-wss.nestage.io" : "wss://prev-wss.nestage.io";
 
 export const useWebSocket = () => {
   const {address, setNotifications} = useNotificationStore();
