@@ -12,25 +12,32 @@ export const useBNB = (walletAddress: string) => {
         client: client,
         address: walletAddress,
         chain: NETWORK_MODE === "mainnet" ? bsc : bscTestnet,
-    });
-
+    })
     
-    return { balance: data?.displayValue, symbol: data?.symbol, isLoading, isError }
-}
+    return {
+        balance: data?.displayValue ?? 0,
+        symbol: data?.symbol ?? "bnb",
+        isLoading,
+        isError
+    };
+};
+
 
 export const getBUSD = async (walletAddress: string) => {
-    let bal, err
-        if (window.ethereum) {
-            const provider = new BrowserProvider(window.ethereum);
-            try {
-                const signer = await provider.getSigner();
-                const busdContract = new Contract(nestageAddress!, BUSD_ABI, signer);
-
-                bal = await busdContract.getBalance(walletAddress);
-            } catch (error) {
-                console.error("Error fetching BUSD balance:", error);
-                err = `Error fetching BUSD balance: ${error}`
-            }
+    let bal: bigint = BigInt(0), err: string | null = null;
+    
+    if (window.ethereum) {
+        const provider = new BrowserProvider(window.ethereum);
+        try {
+            const signer = await provider.getSigner();
+            const busdContract = new Contract(nestageAddress!, BUSD_ABI, signer);
+            
+            bal = await busdContract.getBalance(walletAddress);
+        } catch (error) {
+            console.error("Error fetching BUSD balance:", error);
+            err = `Error fetching BUSD balance: ${error}`;
         }
-    return { balance: formatUnits(bal, "ether"), error: err }
-    };
+    }
+    
+    return {balance: formatUnits(bal || BigInt(0), "ether"), error: err};
+};

@@ -1,6 +1,6 @@
 "use client"
 
-import {ConnectButton, useActiveWalletConnectionStatus} from "thirdweb/react";
+import {ConnectButton, useActiveAccount, useActiveWalletConnectionStatus} from "thirdweb/react";
 import {Button} from "../ui/button";
 import useDeviceSize from "@/hooks/useMediaQuery"
 import {bsc, bscTestnet} from "thirdweb/chains";
@@ -11,12 +11,10 @@ import {NETWORK_MODE, SITE_MODE} from "@/config";
 import {createWallet} from "thirdweb/wallets";
 import {useWeb3Store} from "@/store";
 import {useAuthStore} from "@/store/auth";
-import {searchStringInArray} from "@/functions";
 
-import {useRouter} from 'next/navigation';
-import {getReferrals} from "@/actions";
+import {usePathname, useRouter} from 'next/navigation';
+import {getAuth} from "@/actions";
 import UserAvatar from "@/components/molecules/UserAvatar";
-import {useGetStakers} from "@/hooks/useWeb3";
 
 interface ConnectWalletProps {
   state?: string;
@@ -34,104 +32,151 @@ const activeChainM = bsc;
 
 const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   const router = useRouter();
+  const pathName = usePathname()
+  
   const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
+  const activeAccount = useActiveAccount();
   
   const setAddress = useWeb3Store((state) => state.setAddress);
-  // const addr = useWeb3Store((state) => state.address);
-  const setIsAuth = useAuthStore((state) => state.setIsAuth);
-  const address = useWeb3Store((state) => state.address);
-  const stakers = useGetStakers();
+  // // const addr = useWeb3Store((state) => state.address);
+  const setAuth = useAuthStore((state) => state.setIsAuth);
+  // const address = useWeb3Store((state) => state.address);
+  // const stakers = useGetStakers();
   
-  const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
-  const [isLoading, setIsLoading] = useState(!!1);
-  const [hasStake, setHasStake] = useState(!!0);
-  const [isNew, setIsNew] = useState(!!1)
-  const [hasRef, setHasRef] = useState(!!0);
-  const [disabled, setDisabled] = useState(!!1);
-  const [viewDashBoard] = useState(!!0);
-  const [init, setInit] = useState(1);
+  const [isAuth, setIsAuth] = useState(!!0)
+  const [isRouting, setIsRouting] = useState(!!0)
+  const [loading, setLoading] = useState(!!1)
+  const [addr, setAddr] = useState("");
+  const [navigating, setNavigating] = useState(!!0);
   
-  const initX = async () => {
-    console.log("checking - ")
-    let result = !!0;
-    console.log({params: {stakers, address}})
-    if (stakers.length) result = await searchStringInArray(stakers, address);
-    console.log(result)
-    setHasStake(result);
-    setIsNew(!!0)
-  }
+  // const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
+  // const [isLoading, setIsLoading] = useState(!!1);
+  // const [hasStake, setHasStake] = useState(!!0);
+  // const [isNew, setIsNew] = useState(!!1)
+  // const [hasRef, setHasRef] = useState(!!0);
+  // const [disabled, setDisabled] = useState(!!1);
+  // const [init, setInit] = useState(1);
   
-  const Redirect = () => {
-    // console.log
-    if (hasStake || hasRef) {
-      setDisabled(!!1)
-      router.push(`/user/${address}`)
-    } else {
-      setDisabled(!!0)
-      setIsLoading(!!0)
-    }
-  }
+  // const initX = async () => {
+  //   console.log("checking - ")
+  //   let result = !!0;
+  //   console.log({params: {stakers, address}})
+  //   if (stakers.length) result = await searchStringInArray(stakers, address);
+  //   console.log(result)
+  //   setHasStake(result);
+  //   setIsNew(!!0)
+  // }
+  
+  // const Redirect = () => {
+  //   // console.log
+  //   if (hasStake || hasRef) {
+  //     setDisabled(!!1)
+  //     router.push(`/user/${address}`)
+  //   } else {
+  //     setDisabled(!!0)
+  //     setIsLoading(!!0)
+  //   }
+  // }
   
   const Nav = () => {
-    setIsLoading(!!1)
+    setLoading(!!1)
     router.push("/connect-wallet")
   }
   
-  useEffect(() => {
-    if (shouldFetchStakers) {
-      console.log("checking")
-      initX()
-      // setShouldFetchStakers(!!0);
-    }
-  }, [shouldFetchStakers, stakers]);
+  // useEffect(() => {
+  //   if (shouldFetchStakers) {
+  //     console.log("checking")
+  //     initX()
+  //     // setShouldFetchStakers(!!0);
+  //   }
+  // }, [shouldFetchStakers, stakers]);
   
-  useEffect(() => {
-    console.log({hasStake, hasRef, init, disabled, isLoading})
-    setDisabled(!!1)
-    if (init > 1) {
-      setIsLoading(!!1)
-      Redirect()
+  // useEffect(() => {
+  //   console.log({hasStake, hasRef, init, disabled, isLoading})
+  //   setDisabled(!!1)
+  //   if (init > 1) {
+  //     setIsLoading(!!1)
+  //     Redirect()
+  //   } else {
+  //     setDisabled(!!0)
+  //   }
+  // }, [hasStake, hasRef, init]);
+  
+  // useEffect(() => {
+  //   if (status === "disconnected" && !isNew) {
+  //     resetState()
+  //   }
+  //   if (status === "connected" && address) {
+  //     const checkNew = async () => {
+  //       setAddress(address);
+  //       setIsAuth(!!0);
+  //       checkLvlOne();
+  //       await checkLvlTwo(address);
+  //     }
+  //     checkNew()
+  //   }
+  // }, [address])
+  
+  // const resetState = () => {
+  //   setIsAuth(!!0)
+  //   setAddress("")
+  //   setHasStake(!!0)
+  //   setHasRef(!!0)
+  //   setInit(1)
+  //   setShouldFetchStakers(!!0)
+  // }
+  
+  // const checkLvlOne = () => {
+  //   console.log("should check")
+  //   setShouldFetchStakers(!!1);
+  // }
+  
+  // const checkLvlTwo = async (addr: string) => {
+  //   const res = await getReferrals({address: addr})
+  //   setHasRef(res)
+  //   setInit(2)
+  //   setIsNew(!!0)
+  // }
+  
+  const checkAuth = async (address: string) => {
+    const res = await getAuth(address)
+    if (res) {
+      setIsAuth(true)
+      setAuth(true)
+      setNavigating(!!1)
+      router.replace(`/user/${address}`)
     } else {
-      setDisabled(!!0)
+      setLoading(!!0)
     }
-  }, [hasStake, hasRef, init]);
+  }
+  
+  const Wallet = async () => {
+    if (status === "connected" && !navigating && !pathName.includes("/user")) {
+      const ad = activeAccount?.address || addr;
+      
+      setIsAuth(false);
+      setLoading(true);
+      setAuth(true);
+      await checkAuth(ad)
+    } else if (status === "connecting") {
+      setIsAuth(true);
+      setIsRouting(true);
+      // if(pathName.includes("user"))
+    } else if (pathName.includes("user")) {
+      // const ad = activeAccount?.address!;
+      // await checkAuth(ad)
+      // setTimeout(() => {
+      //   router.replace(`/`);
+      // }, 0);
+    }
+  }
   
   useEffect(() => {
-    if (status === "disconnected" && !isNew) {
-      resetState()
-    }
-    if (status === "connected" && address) {
-      const checkNew = async () => {
-        setAddress(address);
-        setIsAuth(!!0);
-        checkLvlOne();
-        await checkLvlTwo(address);
-      }
-      checkNew()
-    }
-  }, [address])
+    Wallet()
+  }, [status]);
   
-  const resetState = () => {
-    setIsAuth(!!0)
-    setAddress("")
-    setHasStake(!!0)
-    setHasRef(!!0)
-    setInit(1)
-    setShouldFetchStakers(!!0)
-  }
   
-  const checkLvlOne = () => {
-    console.log("should check")
-    setShouldFetchStakers(!!1);
-  }
-  
-  const checkLvlTwo = async (addr: string) => {
-    const res = await getReferrals({address: addr})
-    setHasRef(res)
-    setInit(2)
-    setIsNew(!!0)
-  }
-  
+  // console.log({raw: status})
   const welcomeScreen = {
     title: "Connect your wallet to Nestage and begin your Staking journey.",
     subtitle: "Connect your wallet to get started",
@@ -154,20 +199,10 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
     <>
       {status === "connected" && !isDashboard ? (
         <>
-          {disabled ? (
-            init === 1 ? (
+          {isAuth ? (
+            isRouting ? (
               <Button
-                disabled={viewDashBoard}
-                variant="default"
-                className={`text-semibold rounded-full border border-gray-500 text-white font-semibold ${
-                  state === "fill" ? "bg-[#06351C]" : "bg-transparent"
-                } cursor-not-allowed opacity-50`}
-              >
-                Connecting
-              </Button>
-            ) : init > 1 ? (
-              <Button
-                disabled={viewDashBoard}
+                disabled={!!1}
                 variant="default"
                 className={`text-semibold rounded-full border border-gray-500 text-white font-semibold ${
                   state === "fill" ? "bg-[#06351C]" : "bg-transparent"
@@ -175,8 +210,18 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
               >
                 Redirecting to Dashboard
               </Button>
-            ) : null
-          ) : isLoading ? (
+            ) : (
+              <Button
+                disabled={!!1}
+                variant="default"
+                className={`text-semibold rounded-full border border-gray-500 text-white font-semibold ${
+                  state === "fill" ? "bg-[#06351C]" : "bg-transparent"
+                } cursor-not-allowed opacity-50`}
+              >
+                Connecting
+              </Button>
+            )
+          ) : loading ? (
             <Button
               variant="default"
               disabled={!!1}
@@ -257,9 +302,11 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
           onConnect={async (wallet) => {
             const address = wallet.getAccount()?.address || "";
             setAddress(address);
+            setAddr(address);
             setIsAuth(!!0);
-            checkLvlOne();
-            await checkLvlTwo(address);
+            await checkAuth(address);
+            // checkLvlOne();
+            // await checkLvlTwo(address);
           }}
           onDisconnect={() => {
             setAddress("")

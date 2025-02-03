@@ -12,6 +12,7 @@
 
 # dependencies
 /node_modules
+*node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -51,9 +52,9 @@ yarn-error.log*
 next-env.d.ts
 
 # leave out
-/backend/node_modules
-/backend/dist
-/backend/src
-/backend/prisma
-/backend/package-lock.json
-/backend/package.json
+/server/backend/node_modules
+/server/backend/dist
+/server/backend/src
+/server/backend/prisma
+/server/backend/package-lock.json
+/server/backend/package.json

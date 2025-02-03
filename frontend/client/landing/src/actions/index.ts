@@ -33,10 +33,20 @@ export const getStakerInfo = async (
   try {
     const {data} = await Axios.get(`referral?mode=getRef;address=${address}`)
     const {status, data: d}: { data: T.getSelfRefResponse | string; status: number } = data
-    console.log({status, d})
     return status === 200 ? d as T.getSelfRefResponse : defaultRefResponse
   } catch (e) {
     console.log({e})
     return defaultRefResponse
+  }
+}
+
+export const getAuth = async (address: string) => {
+  try {
+    const {data} = await Axios.get(`user?address=${address}`)
+    const {status} = data
+    return status === 200 ? !!1 : !!0
+  } catch (e) {
+    console.log({e})
+    return !!0
   }
 }

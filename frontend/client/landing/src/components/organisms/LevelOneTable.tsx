@@ -183,7 +183,7 @@ export const columns: ColumnDef<T.Investment>[] = [
 const LevelOneTable = () => {
   const address = useWeb3Store((state) => state.address);
   const stakers = useGetStakers()
-  const data = getLevelOne(stakers, address)
+  const data = stakers.length ? getLevelOne(stakers, address) : []
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
