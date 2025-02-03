@@ -29,7 +29,7 @@ const LevelTwoNewRefModal = () => {
   const router = useRouter();
   const addr = useWeb3Store((state) => state.address);
   const activeAccount = useActiveAccount();
-  const [address] = useState(addr ?? activeAccount?.address!)
+  const [address] = useState(() => addr ?? activeAccount?.address ?? "");
   
   const {balance, symbol: sym, isError, isLoading} = useBNB(address);
   
