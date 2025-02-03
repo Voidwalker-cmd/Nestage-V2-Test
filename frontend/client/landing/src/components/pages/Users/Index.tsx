@@ -23,11 +23,13 @@ const UserIndex = () => {
   const [balLoading, setBalLoading] = useState(!!1)
   
   const getBalances = async () => {
-    const one = await levelOne()
-    const two = await levelTwo()
-    
-    if (one && two) {
-      setBalLoading(!!0)
+    if (stakers.length && address) {
+      const one = await levelOne()
+      const two = await levelTwo()
+      
+      if (one && two) {
+        setBalLoading(!!0)
+      }
     }
   }
   
@@ -53,7 +55,7 @@ const UserIndex = () => {
   
   useEffect(() => {
     getBalances()
-  }, []);
+  }, [stakers, address]);
   
   return (
     <>

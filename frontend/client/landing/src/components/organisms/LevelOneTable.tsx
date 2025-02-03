@@ -376,7 +376,7 @@ const LevelOneTable = () => {
             </CardHeader>
             <CardDescription className="!text-center !mb-6 !flex flex-col !justify-center !items-center gap-3">
               <span className="italic font-medium">{`You don't have any active stake yet.`}</span>
-              <LevelOneNewStakeModal size="large"/>
+              {stakers.length ? <LevelOneNewStakeModal size="large"/> : ("")}
             </CardDescription>
           </Card>
         </div>

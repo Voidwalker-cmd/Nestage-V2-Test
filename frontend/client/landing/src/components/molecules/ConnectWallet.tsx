@@ -49,6 +49,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   const [addr, setAddr] = useState("");
   const [navigating, setNavigating] = useState(!!0);
   const [auto, setAuto] = useState(!!1);
+  const [checking, setChecking] = useState(!!0);
   
   // const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
   // const [isLoading, setIsLoading] = useState(!!1);
@@ -140,6 +141,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   // }
   
   const checkAuth = async (address: string) => {
+    setChecking(!!1)
     const res = await getAuth(address)
     if (res) {
       setIsAuth(true)
@@ -149,6 +151,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
     } else {
       setLoading(!!0)
     }
+    setChecking(!!0)
   }
   
   const Wallet = async () => {
@@ -159,7 +162,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
         setIsAuth(false);
         setLoading(true);
         setAuth(true);
-        await checkAuth(ad)
+        if (!checking) await checkAuth(ad)
       } else if (status === "connecting") {
         setIsAuth(true);
         setIsRouting(true);

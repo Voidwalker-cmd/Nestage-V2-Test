@@ -27,10 +27,11 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   const pathName = usePathname()
   //
   const [addr, setAddr] = useState("");
-  const [redo, setRedo] = useState(0);
+  const [redo] = useState(0);
   const [hold, setHold] = useState(!!0);
   const [isLoading, setIsLoading] = useState(!!0);
   const [isClient, setIsClient] = useState(!!0);
+  const [checking, setChecking] = useState(!!0);
   //
   const {data: autoConnected} = useAutoConnect({
     client,
@@ -140,48 +141,54 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   //
   
   const checkAuth = async (address: string) => {
+    setChecking(!!1)
     const res = await getAuth(address)
     if (res) {
-      setHold(!!1)
       if (!pathName.includes("user")) {
         router.replace(`/user/${address}`)
+      } else {
+      setHold(!!1)
+        setIsLoading(!!1)
       }
     } else {
       if (pathName.includes("user")) {
         router.replace(`/`)
+      } else {
+        setIsLoading(!!1)
+        setHold(!!1)
       }
-      setIsLoading(!!1)
     }
+    setChecking(!!1)
   }
   
   const Init = async () => {
     const address = activeAccount?.address || addr
     if (pathName.includes("/connect-wallet")) {
       if (status === "connected") {
-        await checkAuth(address)
+        if (!checking) await checkAuth(address)
       } else {
         if (status === "disconnected" && !address) {
           router.replace(`/`);
         } else {
-          setRedo(Math.random())
+          // setRedo(Math.random())
         }
       }
     } else if (pathName.includes("/user/")) {
       if (status === "connected") {
         if (!address) {
-          setRedo(Math.random())
+          // setRedo(Math.random())
         } else {
           if (address !== params.userAddress) {
-            setHold(!!1)
+            // setHold(!!1)
             router.replace(`/`);
           } else {
-            await checkAuth(address)
+            if (!checking) await checkAuth(address)
             setIsLoading(!!1)
-            setHold(!!1)
+            // setHold(!!1)
           }
         }
       } else if (status === "disconnected") {
-        setHold(!!1)
+        // setHold(!!1)
         router.replace(`/`);
       } else {
         // setRedo(Math.random())
