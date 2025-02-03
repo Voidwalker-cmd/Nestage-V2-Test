@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import {useRouter} from "next/navigation";
 import {useWeb3Store} from "@/store";
-import {getBUSD, useBNB} from "@/hooks/useBalance";
+import {getBUSD} from "@/hooks/useBalance";
 import {refKey, SITE_MODE} from "@/config";
 import {useEffect, useState} from "react";
 import {newReferral} from "@/actions/newReferral";
@@ -31,10 +31,10 @@ const LevelTwoNewRefModal = () => {
   const activeAccount = useActiveAccount();
   const [address] = useState(addr || activeAccount?.address!)
   
-  const {balance, symbol: sym, isError, isLoading} = useBNB(address);
+  // const {balance, symbol: sym, isError, isLoading} = useBNB(address);
   
-  const [bnb, setBnb] = useState<string | number>(0)
-  const [symbol, setSymbol] = useState("")
+  const [bnb] = useState<string | number>(0)
+  const [symbol] = useState("bnb")
   
   const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 1 : 5;
   
@@ -54,10 +54,10 @@ const LevelTwoNewRefModal = () => {
     }
   }, [])
   
-  useEffect(() => {
-    setBnb(balance);  // Always a valid number (default 0)
-    setSymbol(sym); // Always a valid string (default "bnb")
-  }, [balance, isError, isLoading]);
+  // useEffect(() => {
+  //   setBnb(balance);  // Always a valid number (default 0)
+  //   setSymbol(sym); // Always a valid string (default "bnb")
+  // }, [balance, isError, isLoading]);
 
   
   // useEffect(() => {
@@ -74,7 +74,7 @@ const LevelTwoNewRefModal = () => {
     } else {
       setLowBUSD(!!0);
     }
-    if (Number(bnb) === 0) {
+    if (Number(bnb) >= 0) {
       setLowBNB(!!1)
     } else {
       setLowBNB(!!0);
