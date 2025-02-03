@@ -57,7 +57,7 @@ const LevelTwoNewRefModal = () => {
   useEffect(() => {
     setBnb(balance);
     setSymbol(sym);
-  }, [balance, sym, isError, isLoading]);
+  }, [balance, sym, isError, isLoading])
 
   
   // useEffect(() => {
