@@ -197,8 +197,8 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
       const getLive = sessionStorage.getItem('connect-walletBtn-check')
       if (!getLive) {
         setIsLoading(!!1)
-        setHold(!!1)
       }
+        setHold(!!1)
     }
   }
   
