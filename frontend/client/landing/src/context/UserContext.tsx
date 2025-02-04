@@ -66,7 +66,7 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
   const totalProfit = () => lvlOne + lvlTwo
   
   useEffect(() => {
-    alert(`${address} - ${stakers.length}`)
+    // alert(`${address} - ${stakers.length}`)
     getBalances()
   }, [stakers, address]);
   
