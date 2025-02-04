@@ -7,7 +7,7 @@ import type {Metadata} from "next";
 import "./../../../globals.css";
 import DashboardNav from "@/components/organisms/DashboardNav";
 import {ThemeProvider} from "@/components/molecules/ThemeProvider"
-import UserContext from "@/context/UserContext";
+import {UserProvider} from "@/context/UserContext";
 
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default async function Layout({ children, levelOne, levelTwo }: { childre
 
   return (
     <>
-      <UserContext>
+      <UserProvider>
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
@@ -41,7 +41,7 @@ export default async function Layout({ children, levelOne, levelTwo }: { childre
         </main>
       </SidebarProvider>
     </ThemeProvider>
-      </UserContext>
+      </UserProvider>
     </>
   )
 }

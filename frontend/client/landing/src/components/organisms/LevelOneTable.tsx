@@ -14,7 +14,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import {ArrowUpDown, ChevronDown} from "lucide-react"
+import {ArrowUpDown, ChevronDown, Loader2} from "lucide-react"
 
 import {Button} from "@/components/ui/button"
 import {
@@ -33,7 +33,8 @@ import {useWeb3Store} from "@/store";
 import {getLevelOne} from "@/functions";
 import LevelOneNewStakeModal from "@/components/organisms/LevelOneNewStakeModal";
 // import {useAuthStore} from "@/store/auth";
-import {useGetStakers} from "@/hooks/useWeb3";
+// import {useGetStakers} from "@/hooks/useWeb3";
+import {useUserContext} from "@/context/UserContext";
 
 const formatDate = (timestamp: number): string => {
   const date = new Date(timestamp)
@@ -182,7 +183,7 @@ export const columns: ColumnDef<T.Investment>[] = [
 
 const LevelOneTable = () => {
   const address = useWeb3Store((state) => state.address);
-  const stakers = useGetStakers()
+  const {stakers, balLoading} = useUserContext()
   const data = stakers.length ? getLevelOne(stakers, address) : []
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -376,7 +377,8 @@ const LevelOneTable = () => {
             </CardHeader>
             <CardDescription className="!text-center !mb-6 !flex flex-col !justify-center !items-center gap-3">
               <span className="italic font-medium">{`You don't have any active stake yet.`}</span>
-              {stakers.length ? <LevelOneNewStakeModal size="large"/> : ("")}
+              {!balLoading ? <LevelOneNewStakeModal size="large"/> : (<Loader2
+                className="h-5 w-5 animate-spin"/>)}
             </CardDescription>
           </Card>
         </div>

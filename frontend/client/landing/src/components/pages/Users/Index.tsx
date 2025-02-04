@@ -1,61 +1,18 @@
 "use client"
 import {Card, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
 import {Loader2} from "lucide-react";
-import {useEffect, useState} from "react";
-import {useWeb3Store} from "@/store";
-import {getProfit} from "@/functions";
 import {Formatter} from "@/utils";
-import {getReferrerProfits} from "@/actions";
 import {LevelStatus} from "@/components/molecules/LevelStatus";
 import {useAuthStore} from "@/store/auth";
 import {SiteUrl} from "@/functions/site";
 import CopyBtn from "@/components/molecules/CopyBtn";
-import {useGetStakers} from "@/hooks/useWeb3";
+import {useUserContext} from "@/context/UserContext";
 
 
 const UserIndex = () => {
-  const address = useWeb3Store((state) => state.address);
   const user = useAuthStore((state) => state.user)
-  const stakers = useGetStakers();
   
-  const [lvlOne, setLvlOne] = useState(0)
-  const [lvlTwo, setLvlTwo] = useState(0)
-  const [balLoading, setBalLoading] = useState(!!1)
-  
-  const getBalances = async () => {
-    if (stakers.length && address) {
-      const one = await levelOne()
-      const two = await levelTwo()
-      
-      if (one && two) {
-        setBalLoading(!!0)
-      }
-    }
-  }
-  
-  const levelOne = async () => {
-    let profit = 0, p = 0;
-    const staker = await getProfit(stakers, address)
-    for (let i = 0; i < staker.length; i++) {
-      p = Number(staker[i]?.profit)
-      profit = profit + p;
-    }
-    const t = isNaN(profit) ? 0 : profit;
-    setLvlOne(t);
-    return !!1
-  };
-  
-  const levelTwo = async () => {
-    const res = await getReferrerProfits(address)
-    setLvlTwo(Number(res))
-    return !!1
-  }
-  
-  const totalProfit = () => lvlOne + lvlTwo
-  
-  useEffect(() => {
-    getBalances()
-  }, [stakers, address]);
+  const {balLoading, totalProfit, lvlOne, lvlTwo} = useUserContext()
   
   return (
     <>

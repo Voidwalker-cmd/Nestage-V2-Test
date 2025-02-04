@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import Preloader from "@/components/molecules/Loader";
 import {saveRef} from "@/functions/saveRef";
 import {refKey} from "@/config";
-import AuthProvider from "@/context/AuthProvider";
+import AuthContext from "@/context/AuthContext";
 import {AppProvider} from "@/context/AppContext";
 
 export default function Template({ children }: { children: React.ReactNode }) {
@@ -64,11 +64,11 @@ export default function Template({ children }: { children: React.ReactNode }) {
   return (
     <>
       <ThirdwebProvider>
-        <AuthProvider>
+        <AuthContext>
           <AppProvider>
           {children}
           </AppProvider>
-        </AuthProvider>
+        </AuthContext>
       </ThirdwebProvider>
     </>
   );

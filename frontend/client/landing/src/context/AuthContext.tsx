@@ -10,30 +10,32 @@ import Preloader from '@/components/molecules/Loader';
 import {createThirdwebClient} from "thirdweb";
 import {getAuth} from "@/actions";
 import {useWeb3Store} from "@/store";
+import {useAuthStore} from "@/store/auth";
 
 export const client = createThirdwebClient({
   clientId: "520d55c9ed1eb0dc52af37d81000ce76",
 });
 
-const AuthProvider = ({children}: { children: React.ReactNode }) => {
+const AuthContext = ({children}: { children: React.ReactNode }) => {
   // const stakerList = useGetStakers()
   const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
   const activeAccount = useActiveAccount();
   const setUserAddress = useWeb3Store((state) => state.setAddress);
-  // const auth = useAuthStore((state) => state.auth);
+  const savedAddress = useWeb3Store((state) => state.address);
+  const auth = useAuthStore((state) => state.isAuth);
+  const setAuth = useAuthStore((state) => state.setIsAuth);
   //
   const router = useRouter();
   const params = useParams<{ userAddress: string }>();
   const pathName = usePathname()
   //
-  const [addr, setAddr] = useState("");
-  const [redo] = useState(0);
+  const [addr, setAddr] = useState(savedAddress);
   const [hold, setHold] = useState(!!0);
   const [isLoading, setIsLoading] = useState(!!0);
   const [isClient, setIsClient] = useState(!!0);
   const [checking, setChecking] = useState(!!0);
   //
-  const {data: autoConnected} = useAutoConnect({
+  useAutoConnect({
     client,
     onConnect: (w: Wallet) => {
       const address = w.getAccount()?.address || "";
@@ -60,8 +62,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   //   if (isClient) {
   //     const path = params.userAddress;
   //
-  //     if (!path) {
-  //       if (autoConnected && address) {
+  //     if (!pa//       if && address) {
   //         const hasStake = await initY()
   //         const hasRef = await initZ()
   //         if (hasStake || hasRef) {
@@ -130,7 +131,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   //
   // useEffect(() => {
   //   initX()
-  // }, [params.userAddress, address, autoConnected, isLoading, isLoaded, isClient]);
+  // }, [params.userA, address, isLoading, isLoaded, isClient]);
   //
   // useEffect(() => {
   //   if( load > 0 && status === "disconnected" && pathName !== "/"){
@@ -146,8 +147,10 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
     if (res) {
       if (!pathName.includes("user")) {
         router.replace(`/user/${address}`)
+        setAuth(!!1)
       } else {
       setHold(!!1)
+        setAuth(!!1)
         setIsLoading(!!1)
       }
     } else {
@@ -162,13 +165,17 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   }
   
   const Init = async () => {
-    const address = activeAccount?.address || addr
+    const address = activeAccount?.address || addr || savedAddress
     if (pathName.includes("/connect-wallet")) {
+      // alert(`1 - ${address} - ${savedAddress}`);
       if (status === "connected") {
         if (!checking) await checkAuth(address)
       } else {
-        if (status === "disconnected" && !address) {
+        // alert(`2 - ${activeAccount?.address} - ${addr}`);
+        if (status === "disconnected" && !auth) {
+          if (!activeAccount?.address) {
           router.replace(`/`);
+          }
         } else {
           // setRedo(Math.random())
         }
@@ -183,11 +190,11 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
             router.replace(`/`);
           } else {
             if (!checking) await checkAuth(address)
-            setIsLoading(!!1)
+            // setIsLoading(!!1)
             // setHold(!!1)
           }
         }
-      } else if (status === "disconnected") {
+      } else if (status === "disconnected" && !auth) {
         // setHold(!!1)
         router.replace(`/`);
       } else {
@@ -195,7 +202,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
       }
     } else {
       const getLive = sessionStorage.getItem('connect-walletBtn-check')
-      console.log({getLive})
+      // console.log({getLive})
       if (!getLive) {
         setIsLoading(!!1)
       }
@@ -205,13 +212,13 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   
   useEffect(() => {
     if (isClient) Init()
-  }, [isClient, redo, status, autoConnected])
+  }, [isClient, status])
   
   useEffect(() => {
     setIsClient(!!1);
   }, []);
   
-  console.log({isLoading, isClient, hold})
+  // console.log({isLoading, isClient, hold})
   if (!isLoading || !isClient || !hold) {
     return <Preloader/>;
   }
@@ -221,4 +228,4 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   )
 }
 
-export default AuthProvider;
+export default AuthContext;

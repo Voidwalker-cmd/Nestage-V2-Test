@@ -92,7 +92,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   
   const Nav = () => {
     setLoading(!!1)
-    router.push("/connect-wallet")
+    router.replace("/connect-wallet")
   }
   
   // useEffect(() => {
@@ -160,10 +160,13 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
         setIsAuth(true)
         setAuth(true)
         setNavigating(!!1)
+        setAddress(address);
         router.replace(`/user/${address}`)
       } else {
         setLoading(!!0)
+        setAuth(!!0)
       }
+      setAuth(!!0)
       setChecking(!!0)
     }
     sessionStorage.removeItem('connect-walletBtn-check')
@@ -171,12 +174,12 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   
   const Wallet = async () => {
     if (auto) {
-      if (status === "connected" && !navigating && !pathName.includes("/user")) {
+      if (status === "connected" && !navigating && pathName === "/") {
         const ad = activeAccount?.address ?? addr;
         
         setIsAuth(false);
         setLoading(true);
-        setAuth(true);
+        // setAuth(true);
         if (!checking) await checkAuth(ad)
       } else if (status === "connecting") {
         setIsAuth(true);
