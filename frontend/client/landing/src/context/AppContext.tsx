@@ -1,7 +1,6 @@
 "use client";
 import {createContext, ReactNode, useContext, useState} from "react";
 
-// Define the shape of the context
 interface AppContextType {
   isAuth: boolean;
   setIsAuth: (value: boolean) => void;
@@ -19,13 +18,11 @@ interface AppContextType {
   setAddr: (value: string) => void;
 }
 
-// Create the context with default values
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Context Provider Component
 export const AppProvider = ({children}: { children: ReactNode }) => {
   const [isAuth, setIsAuth] = useState(false);
-  const [isRouting, setIsRouting] = useState(false);
+  const [isRouting, setIsRouting] = useState(!!1);
   const [loading, setLoading] = useState(true);
   const [navigating, setNavigating] = useState(false);
   const [auto, setAuto] = useState(true);
@@ -61,7 +58,6 @@ export const AppProvider = ({children}: { children: ReactNode }) => {
     ;
 };
 
-// Custom hook to use context
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {

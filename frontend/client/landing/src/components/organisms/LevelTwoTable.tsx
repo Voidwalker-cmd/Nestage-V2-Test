@@ -1,12 +1,16 @@
 "use client"
 
+import * as React from "react";
 import {FC} from "react";
 import {Card, CardDescription, CardHeader} from "../ui/card";
 import {useAuthStore} from "@/store/auth";
 import * as T from "@/types";
 import LevelTwoNewRefModal from "@/components/organisms/LevelTwoNewRefModal";
+import {Loader2} from "lucide-react";
+import {useUserContext} from "@/context/UserContext";
 
 const ReferralStats: FC<{ user: T.getSelfRefResponse }> = ({user}) => {
+  const {balLoading} = useUserContext()
   return (
     <div className="p-0 lg:px-8 lg:py-4 flex items-center justify-center">
       {user.code !== "" ? (
@@ -50,7 +54,8 @@ const ReferralStats: FC<{ user: T.getSelfRefResponse }> = ({user}) => {
           <CardDescription className="!text-center !mb-6 !flex flex-col !justify-center !items-center gap-3">
             <span className="italic font-bold">{`You haven't referred any users yet.`}</span>
             <span className="italic">You have to Activate Level Two to get your Referral Code/Link.</span>
-            <LevelTwoNewRefModal/>
+            {!balLoading ? <LevelTwoNewRefModal/> : (<Loader2
+              className="h-5 w-5 animate-spin"/>)}
           </CardDescription>
         </Card>
       )}
