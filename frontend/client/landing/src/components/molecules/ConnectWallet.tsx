@@ -5,7 +5,7 @@ import {Button} from "../ui/button";
 import useDeviceSize from "@/hooks/useMediaQuery"
 import {bsc, bscTestnet} from "thirdweb/chains";
 import {createThirdwebClient} from "thirdweb";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 
 import {NETWORK_MODE, SITE_MODE} from "@/config";
 import {createWallet} from "thirdweb/wallets";
@@ -15,6 +15,7 @@ import {useAuthStore} from "@/store/auth";
 import {usePathname, useRouter} from 'next/navigation';
 import {getAuth} from "@/actions";
 import UserAvatar from "@/components/molecules/UserAvatar";
+import {useAppContext} from "@/context/AppContext";
 
 interface ConnectWalletProps {
   state?: string;
@@ -43,13 +44,22 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   // const address = useWeb3Store((state) => state.address);
   // const stakers = useGetStakers();
   
-  const [isAuth, setIsAuth] = useState(!!0)
-  const [isRouting, setIsRouting] = useState(!!0)
-  const [loading, setLoading] = useState(!!1)
-  const [addr, setAddr] = useState("");
-  const [navigating, setNavigating] = useState(!!0);
-  const [auto, setAuto] = useState(!!1);
-  const [checking, setChecking] = useState(!!0);
+  const {
+    isAuth,
+    setIsAuth,
+    isRouting,
+    setIsRouting,
+    loading,
+    setLoading,
+    navigating,
+    setNavigating,
+    auto,
+    setAuto,
+    checking,
+    setChecking,
+    addr,
+    setAddr,
+  } = useAppContext()
   
   // const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
   // const [isLoading, setIsLoading] = useState(!!1);
@@ -141,18 +151,21 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   // }
   
   const checkAuth = async (address: string) => {
-    setChecking(!!1)
-    sessionStorage.setItem('connect-walletBtn-check', 'live')
-    const res = await getAuth(address)
-    if (res) {
-      setIsAuth(true)
-      setAuth(true)
-      setNavigating(!!1)
-      router.replace(`/user/${address}`)
-    } else {
-      setLoading(!!0)
+    const getLive = sessionStorage.getItem('connect-walletBtn-check')
+    if (!getLive) {
+      setChecking(!!1)
+      sessionStorage.setItem('connect-walletBtn-check', 'live')
+      const res = await getAuth(address)
+      if (res) {
+        setIsAuth(true)
+        setAuth(true)
+        setNavigating(!!1)
+        router.replace(`/user/${address}`)
+      } else {
+        setLoading(!!0)
+      }
+      setChecking(!!0)
     }
-    setChecking(!!0)
     sessionStorage.removeItem('connect-walletBtn-check')
   }
   

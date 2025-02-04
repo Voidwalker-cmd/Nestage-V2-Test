@@ -6,6 +6,7 @@ import Preloader from "@/components/molecules/Loader";
 import {saveRef} from "@/functions/saveRef";
 import {refKey} from "@/config";
 import AuthProvider from "@/context/AuthProvider";
+import {AppProvider} from "@/context/AppContext";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
@@ -64,7 +65,9 @@ export default function Template({ children }: { children: React.ReactNode }) {
     <>
       <ThirdwebProvider>
         <AuthProvider>
+          <AppProvider>
           {children}
+          </AppProvider>
         </AuthProvider>
       </ThirdwebProvider>
     </>
