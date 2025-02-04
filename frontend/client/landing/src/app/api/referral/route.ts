@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     } else if (mode === "getRef") {
       try {
         const {data, status} = await ServerAxios.get(
-          `get-referral?ref=${address}`
+          `user?address=${address}`
         );
         result = data;
         statusCode = status;

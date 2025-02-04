@@ -194,8 +194,11 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
         // setRedo(Math.random())
       }
     } else {
-      setIsLoading(!!1)
-      setHold(!!1)
+      const getLive = sessionStorage.getItem('connect-walletBtn-check')
+      if (!getLive) {
+        setIsLoading(!!1)
+        setHold(!!1)
+      }
     }
   }
   

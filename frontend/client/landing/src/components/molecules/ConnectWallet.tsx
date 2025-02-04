@@ -142,6 +142,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   
   const checkAuth = async (address: string) => {
     setChecking(!!1)
+    sessionStorage.setItem('connect-walletBtn-check', 'live')
     const res = await getAuth(address)
     if (res) {
       setIsAuth(true)
