@@ -161,7 +161,7 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
         setHold(!!1)
       }
     }
-    setChecking(!!1)
+    setChecking(!!0)
   }
   
   const Init = async () => {
