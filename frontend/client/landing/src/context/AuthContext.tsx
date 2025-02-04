@@ -205,8 +205,8 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
       // console.log({getLive})
       if (!getLive) {
         setIsLoading(!!1)
-      }
         setHold(!!1)
+      }
     }
   }
   
