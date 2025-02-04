@@ -16,6 +16,8 @@ export const client = createThirdwebClient({
   clientId: "520d55c9ed1eb0dc52af37d81000ce76",
 });
 
+const l = console.log
+
 const AuthContext = ({children}: { children: React.ReactNode }) => {
   // const stakerList = useGetStakers()
   const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
@@ -142,21 +144,29 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
   //
   
   const checkAuth = async (address: string) => {
+    l(320)
     setChecking(!!1)
     const res = await getAuth(address)
     if (res) {
+      l(321)
       if (!pathName.includes("user")) {
+        l(322)
         router.replace(`/user/${address}`)
         setAuth(!!1)
       } else {
+        l(323)
+        
       setHold(!!1)
         setAuth(!!1)
         setIsLoading(!!1)
       }
     } else {
+      l(324)
       if (pathName.includes("user")) {
+        l(325)
         router.replace(`/`)
       } else {
+        l(326)
         setIsLoading(!!1)
         setHold(!!1)
       }
@@ -165,45 +175,63 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
   }
   
   const Init = async () => {
+    l(33)
     const address = activeAccount?.address || addr || savedAddress
     if (pathName.includes("/connect-wallet")) {
+      l(34)
+      
       // alert(`1 - ${address} - ${savedAddress}`);
       if (status === "connected") {
+        l(35)
         if (!checking) await checkAuth(address)
       } else {
+        l(36)
         // alert(`2 - ${activeAccount?.address} - ${addr}`);
         if (status === "disconnected" && !auth) {
+          l(37)
           if (!activeAccount?.address) {
+            l(38)
           router.replace(`/`);
           }
         } else {
+          l(39)
           // setRedo(Math.random())
         }
       }
     } else if (pathName.includes("/user/")) {
+      l(310)
       if (status === "connected") {
+        l(311)
         if (!address) {
+          l(312)
           // setRedo(Math.random())
         } else {
+          l(313)
           if (address !== params.userAddress) {
+            l(314)
             // setHold(!!1)
             router.replace(`/`);
           } else {
+            l(315)
             if (!checking) await checkAuth(address)
             // setIsLoading(!!1)
             // setHold(!!1)
           }
         }
       } else if (status === "disconnected" && !auth) {
+        l(316)
         // setHold(!!1)
         router.replace(`/`);
       } else {
+        l(317)
         // setRedo(Math.random())
       }
     } else {
+      l(318)
       const getLive = sessionStorage.getItem('connect-walletBtn-check')
       // console.log({getLive})
       if (!getLive) {
+        l(319)
         setIsLoading(!!1)
         setHold(!!1)
       }
@@ -211,7 +239,11 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
   }
   
   useEffect(() => {
-    if (isClient) Init()
+    l(31)
+    if (isClient) {
+      Init();
+      l(32)
+    }
   }, [isClient, status])
   
   useEffect(() => {
