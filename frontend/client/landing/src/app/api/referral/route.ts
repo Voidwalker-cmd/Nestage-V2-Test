@@ -73,6 +73,7 @@ export async function GET(request: NextRequest) {
         const {data, status} = await ServerAxios.get(
           `user?address=${address}`
         );
+        console.log({data})
         result = data;
         statusCode = status;
       } catch (err) {

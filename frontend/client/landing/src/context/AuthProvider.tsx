@@ -195,10 +195,11 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
       }
     } else {
       const getLive = sessionStorage.getItem('connect-walletBtn-check')
+      console.log({getLive})
       if (!getLive) {
         setIsLoading(!!1)
-        setHold(!!1)
       }
+        setHold(!!1)
     }
   }
   
@@ -210,6 +211,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
     setIsClient(!!1);
   }, []);
   
+  console.log({isLoading, isClient, hold})
   if (!isLoading || !isClient || !hold) {
     return <Preloader/>;
   }
