@@ -17,6 +17,8 @@ import {getAuth} from "@/actions";
 import UserAvatar from "@/components/molecules/UserAvatar";
 import {useAppContext} from "@/context/AppContext";
 
+const l = console.log
+
 interface ConnectWalletProps {
   state?: string;
   isDashboard?: boolean
@@ -151,30 +153,39 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   // }
   
   const checkAuth = async (address: string) => {
+    l(7)
     const getLive = sessionStorage.getItem('connect-walletBtn-check')
     if (!getLive) {
+      l(8)
       setChecking(!!1)
       sessionStorage.setItem('connect-walletBtn-check', 'live')
       const res = await getAuth(address)
       if (res) {
+        l(9)
         setIsAuth(true)
         setAuth(true)
         setNavigating(!!1)
         setAddress(address);
         router.replace(`/user/${address}`)
       } else {
+        l(10)
         setLoading(!!0)
         setAuth(!!0)
       }
+      l(11)
       setAuth(!!0)
       setChecking(!!0)
       sessionStorage.removeItem('connect-walletBtn-check')
     }
+    l(12)
   }
   
   const Wallet = async () => {
+    l(2)
     if (auto) {
+      l(3)
       if (status === "connected" && !navigating && pathName === "/") {
+        l(4)
         const ad = activeAccount?.address ?? addr;
         
         setIsAuth(false);
@@ -182,10 +193,12 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
         // setAuth(true);
         if (!checking) await checkAuth(ad)
       } else if (status === "connecting") {
+        l(5)
         setIsAuth(true);
         setIsRouting(true);
         // if(pathName.includes("user"))
       } else if (pathName.includes("user")) {
+        l(6)
         // const ad = activeAccount?.address!;
         // await checkAuth(ad)
         // setTimeout(() => {
@@ -196,6 +209,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   }
   
   useEffect(() => {
+    console.log(1)
     Wallet()
   }, [status]);
   
