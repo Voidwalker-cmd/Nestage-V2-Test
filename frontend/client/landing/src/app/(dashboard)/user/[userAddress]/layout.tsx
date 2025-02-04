@@ -1,12 +1,13 @@
 // "use client"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/molecules/DashboardSidebar";
-import { cookies } from "next/headers"
+import {SidebarProvider} from "@/components/ui/sidebar"
+import {AppSidebar} from "@/components/molecules/DashboardSidebar";
+import {cookies} from "next/headers"
 
-import type { Metadata } from "next";
+import type {Metadata} from "next";
 import "./../../../globals.css";
 import DashboardNav from "@/components/organisms/DashboardNav";
-import { ThemeProvider } from "@/components/molecules/ThemeProvider"
+import {ThemeProvider} from "@/components/molecules/ThemeProvider"
+import UserContext from "@/context/UserContext";
 
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default async function Layout({ children, levelOne, levelTwo }: { childre
 
   return (
     <>
+      <UserContext>
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
@@ -39,6 +41,7 @@ export default async function Layout({ children, levelOne, levelTwo }: { childre
         </main>
       </SidebarProvider>
     </ThemeProvider>
+      </UserContext>
     </>
   )
 }

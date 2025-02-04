@@ -1,3 +1,4 @@
+"use client"
 import {useWeb3Store} from "@/store";
 import {useEffect} from "react";
 import {getStakerInfo} from "@/actions";

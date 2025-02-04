@@ -13,7 +13,6 @@ export const useWebSocket = () => {
     const socket = new WebSocket(WS_URL);
     
     socket.onopen = () => {
-      console.log("Connected to WebSocket server");
       
       // Register user with address
       socket.send(JSON.stringify({type: "REGISTER", address, role: "028777bc-b97c-4c20-870e-33a556e84801"}));
@@ -28,7 +27,6 @@ export const useWebSocket = () => {
     };
     
     socket.onclose = () => {
-      console.log("WebSocket connection closed");
     };
     
     return () => {
