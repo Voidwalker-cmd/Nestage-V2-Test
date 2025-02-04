@@ -168,8 +168,8 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
       }
       setAuth(!!0)
       setChecking(!!0)
+      sessionStorage.removeItem('connect-walletBtn-check')
     }
-    sessionStorage.removeItem('connect-walletBtn-check')
   }
   
   const Wallet = async () => {
