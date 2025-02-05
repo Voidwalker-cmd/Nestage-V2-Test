@@ -23,6 +23,7 @@ interface AppContextType {
   checking: boolean;
   setIsLoading: (value: boolean) => void;
   isAuth: boolean
+  setDashboardDisconneted: (value: boolean) => void;
 }
 
 const AuthContext = createContext<AppContextType | undefined>(undefined);
@@ -43,9 +44,9 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(!!0);
   const [isClient, setIsClient] = useState(!!0);
   const [autoConnect, setAutoConnect] = useState(!!1);
-  const [logOut, setLogout] = useState(!!0);
   const [checking, setChecking] = useState(!!1);
   const [isAuth, setIsAuth] = useState(!!0);
+  const [dashboardDisconneted, setDashboardDisconneted] = useState(!!0);
  
   useAutoConnect({
     client,
@@ -88,7 +89,6 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       } else {
         setIsLoading(!!1)
         setHold(!!1)
-        setLogout(!!1)
       }
     }
     setChecking(!!0)
@@ -142,10 +142,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         setHold(!!0)
         setIsLoading(!!0)
         router.replace(`/`);
-      } else if (status === "disconnected" && logOut) {
-        setHold(!!0)
-        setIsLoading(!!0)
-        router.replace(`/`);
+      } else {
+      
       }
     }
   }
@@ -160,6 +158,17 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     setIsClient(!!1);
   }, []);
   
+  useEffect(() => {
+    if (dashboardDisconneted) {
+      setIsLoading(!!0)
+      setHold(!!0)
+      setTimeout(() => {
+        router.replace(`/`)
+      }, 500)
+      setDashboardDisconneted(!!0)
+    }
+  }, [dashboardDisconneted]);
+  
   
   if (!isLoading || !isClient || !hold) {
     return <Preloader/>;
@@ -170,7 +179,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     setAutoConnect,
     checking,
     setIsLoading,
-    isAuth
+    isAuth,
+    setDashboardDisconneted
   }
   
   return (
