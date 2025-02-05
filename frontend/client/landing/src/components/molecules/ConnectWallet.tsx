@@ -5,7 +5,7 @@ import {Button} from "../ui/button";
 import useDeviceSize from "@/hooks/useMediaQuery"
 import {bsc, bscTestnet} from "thirdweb/chains";
 import {createThirdwebClient} from "thirdweb";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 import {NETWORK_MODE, SITE_MODE} from "@/config";
 import {createWallet} from "thirdweb/wallets";
@@ -37,7 +37,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   const router = useRouter();
   const pathName = usePathname()
   
-  const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
+  const stat: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
   const activeAccount = useActiveAccount();
   
   const setAddress = useWeb3Store((state) => state.setAddress);
@@ -62,6 +62,12 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
     addr,
     setAddr,
   } = useAppContext()
+  
+  const [status, setStatus] = useState(stat);
+  
+  useEffect(() => {
+    setStatus(stat)
+  }, [stat]);
   
   // const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
   // const [isLoading, setIsLoading] = useState(!!1);
