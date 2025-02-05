@@ -1,7 +1,6 @@
 "use client"
 
-import * as React from "react"
-import {useEffect} from "react"
+import {useState} from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -185,19 +184,11 @@ const LevelOneTable = () => {
   const address = useWeb3Store((state) => state.address);
   const {stakers, balLoading} = useUserContext()
   const data = stakers.length ? getLevelOne(stakers, address) : []
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [globalFilter, setGlobalFilter] = React.useState("")
-  
-  useEffect(() => {
-    if (data.length) {
-      sessionStorage.clear()
-    } else {
-      sessionStorage.setItem("c6f03c2a-cb01-464d-b0ce-0ed3656b5d24", "d7c3c465-348e-4a91-8e6e-2543c37b5ae0")
-    }
-  }, [data]);
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
+  const [globalFilter, setGlobalFilter] = useState("")
   
   const table = useReactTable({
     data,
