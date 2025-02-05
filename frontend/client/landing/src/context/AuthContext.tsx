@@ -20,7 +20,7 @@ const l = console.log
 
 const AuthContext = ({children}: { children: React.ReactNode }) => {
   // const stakerList = useGetStakers()
-  const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
+  const stat: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
   const activeAccount = useActiveAccount();
   const setUserAddress = useWeb3Store((state) => state.setAddress);
   const savedAddress = useWeb3Store((state) => state.address);
@@ -31,12 +31,18 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
   const params = useParams<{ userAddress: string }>();
   const pathName = usePathname()
   //
+  const [status, setStatus] = useState(stat);
   const [addr, setAddr] = useState(savedAddress);
   const [hold, setHold] = useState(!!0);
   const [isLoading, setIsLoading] = useState(!!0);
   const [isClient, setIsClient] = useState(!!0);
   const [checking, setChecking] = useState(!!0);
   //
+  
+  useEffect(() => {
+    setStatus(stat)
+  }, [stat]);
+  
   useAutoConnect({
     client,
     onConnect: (w: Wallet) => {
@@ -241,8 +247,8 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
   useEffect(() => {
     l(31)
     if (isClient) {
-      Init();
       l(32)
+      Init();
     }
   }, [isClient, status])
   
