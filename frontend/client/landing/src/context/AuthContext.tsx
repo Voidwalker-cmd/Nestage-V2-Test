@@ -108,7 +108,6 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       if (status === "connected") {
         await checkAuth(address)
       } else {
-        
         if (status === "disconnected" && !auth) {
           if (!activeAccount?.address) {
             setIsLoading(!!0)
@@ -129,7 +128,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
             setIsLoading(!!0)
             router.replace(`/`);
           } else {
-            if (!checking || !auth) {
+            if (!auth) {
               await checkAuth(address)
             } else {
               setIsLoading(!!1)
@@ -137,7 +136,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
             }
           }
         }
-      } else if (status === "disconnected") {
+      } else if (status === "disconnected" && !auth) {
         setHold(!!0)
         setIsLoading(!!0)
         router.replace(`/`);
