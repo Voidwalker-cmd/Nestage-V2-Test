@@ -40,7 +40,7 @@ const AuthContext = ({children}: { children: React.ReactNode }) => {
   //
   
   useEffect(() => {
-    setStatus(stat)
+    if (stat !== status) setStatus(stat)
   }, [stat]);
   
   useAutoConnect({
