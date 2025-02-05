@@ -18,7 +18,7 @@ export const client = createThirdwebClient({
 
 interface AppContextType {
   status: "connected" | "disconnected" | "connecting";
-  autoConnect: boolean;
+  autoConnect: boolean
   setAutoConnect: (value: boolean) => void;
   checking: boolean;
   setIsLoading: (value: boolean) => void;
