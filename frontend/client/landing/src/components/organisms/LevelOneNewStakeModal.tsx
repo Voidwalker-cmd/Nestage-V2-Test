@@ -25,6 +25,7 @@ import {newStake} from "@/actions/newStake";
 import CopyBtn from "@/components/molecules/CopyBtn";
 import {Loader2} from "lucide-react";
 import {signal} from "@preact/signals-react";
+import {useUserContext} from "@/context/UserContext";
 
 export const btnStateModal = signal("Initializing");
 
@@ -32,6 +33,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
   const router = useRouter();
   const address = useWeb3Store((state) => state.address)
   const {balance: bnb, symbol} = useBNB(address);
+  const {stakers} = useUserContext()
   
   const [busd, setBusd] = useState<number | string>(0);
   const [hasErr, setHasErr] = useState<boolean>(!!0)
@@ -48,7 +50,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
     if (data && size === "icon") {
       setRender(!!0)
     }
-  }, [size]);
+  }, [stakers]);
   
   useEffect(() => {
     const fetchBusd = async () => {
