@@ -66,7 +66,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   const [status, setStatus] = useState(stat);
   
   useEffect(() => {
-    setStatus(stat)
+    if (stat !== status) setStatus(stat)
   }, [stat]);
   
   // const [shouldFetchStakers, setShouldFetchStakers] = useState(!!0);
