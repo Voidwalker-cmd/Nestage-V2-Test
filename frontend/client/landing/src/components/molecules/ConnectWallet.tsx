@@ -14,6 +14,7 @@ import {useRouter} from 'next/navigation';
 import UserAvatar from "@/components/molecules/UserAvatar";
 import {useAppContext} from "@/context/AppContext";
 import {useAuthContext} from "@/context/AuthContext";
+import {useAuthStore} from "@/store/auth";
 
 
 interface ConnectWalletProps {
@@ -33,11 +34,10 @@ const activeChainM = bsc;
 const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
   const router = useRouter();
   const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
-  
+  const setAuth = useAuthStore((state) => state.setIsAuth);
   const setAddress = useWeb3Store((state) => state.setAddress);
   
   const {
-    setIsAuth,
     setAuto,
     setAddr,
   } = useAppContext()
@@ -162,7 +162,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
               const address = wallet.getAccount()?.address || "";
               setAddress(address);
               setAddr(address);
-              setIsAuth(!!0);
+              setAuth(!!1);
               // await checkAuth(address);
               // checkLvlOne();
               // await checkLvlTwo(address);
