@@ -42,7 +42,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
     setAddr,
   } = useAppContext()
   
-  const {setAutoConnect, checking: loading, setIsLoading, isAuth} = useAuthContext()
+  const {setAutoConnect, checking: loading, setIsLoading, isAuth, setDashboardDisconneted} = useAuthContext()
   
   
   const Nav = () => {
@@ -169,6 +169,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
             }}
             onDisconnect={() => {
               setAddress("")
+              setDashboardDisconneted(!!1)
             }}
           />
         </div>)}
