@@ -52,6 +52,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       const address = w.getAccount()?.address || "";
       setAddr(address);
       setUserAddress(address)
+      setAuth(!!1)
     },
   });
   
@@ -104,8 +105,6 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         setHold(!!1)
       }
     } else if (pathName.includes("/connect-wallet")) {
-      
-      
       if (status === "connected") {
         await checkAuth(address)
       } else {
