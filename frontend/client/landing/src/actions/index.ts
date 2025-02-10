@@ -18,7 +18,7 @@ export const getReferrals = async ({address}: { address: string }) => {
 
 export const getReferrerProfits = async (address: string) => {
   try {
-    const {data} = await Axios.get(`referral?mode=pay;address=${address}`)
+    const {data} = await Axios.get(`referral?mode=pay&user=${address}`)
     const {status, data: d}: { data: number | string; status: number } = data
     return status === 200 ? d : 0
   } catch (e) {
@@ -31,7 +31,7 @@ export const getStakerInfo = async (
   address: string
 ) => {
   try {
-    const {data} = await Axios.get(`referral?mode=getRef;address=${address}`)
+    const {data} = await Axios.get(`referral?mode=getRef&address=${address}`)
     const {status, data: d}: { data: T.getSelfRefResponse | string; status: number } = data
     return status === 200 ? d as T.getSelfRefResponse : defaultRefResponse
   } catch (e) {

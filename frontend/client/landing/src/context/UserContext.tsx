@@ -3,17 +3,18 @@ import {useWeb3Store} from "@/store";
 import {createContext, useContext, useEffect, useState} from "react";
 import {getReferrerProfits, getStakerInfo} from "@/actions";
 import {useAuthStore} from "@/store/auth";
-import {useGetStakers} from "@/hooks/useWeb3";
 import {getProfit} from "@/functions";
 import * as T from "@/types"
+import {useAuthContext} from "@/context/AuthContext";
 
 interface UserContextType {
-  stakers: T.ParsedStakersData[];
+  stakers: [] | T.ParsedStakersData[] | undefined;
   balLoading: boolean;
   lvlOne: number;
   lvlTwo: number;
   getBalances: () => void;
-  totalProfit: () => number
+  totalProfit: () => number;
+  stakesLoading: boolean
   // getProfit: (stakers: T.ParsedStakersData[], address: string) => Promise<number[]>;
   
 }
@@ -23,7 +24,9 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({children}: { children: React.ReactNode }) => {
   const address = useWeb3Store((state) => state.address);
   const setUser = useAuthStore((state) => state.setUser)
-  const stakers = useGetStakers();
+  // const stakers = useGetStakers();
+  const {stakeItems: stakers, stakesLoading} = useAuthContext()
+  
   
   const getUserInfo = async () => {
     const res = await getStakerInfo(address)
@@ -35,19 +38,23 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
   const [balLoading, setBalLoading] = useState(!!1)
   
   const getBalances = async () => {
-    if (stakers.length && address) {
-      const one = await levelOne()
-      const two = await levelTwo()
-      
-      if (one && two) {
-        setBalLoading(!!0)
+    if (stakers) {
+      if (stakers?.length && address) {
+        const one = await levelOne()
+        const two = await levelTwo()
+        
+        if (one && two) {
+          setBalLoading(!!0)
+        }
       }
+    } else {
+      setBalLoading(!!0)
     }
   }
   
   const levelOne = async () => {
     let profit = 0, p = 0;
-    const staker = await getProfit(stakers, address)
+    const staker = await getProfit(stakers!, address)
     for (let i = 0; i < staker.length; i++) {
       p = Number(staker[i]?.profit)
       profit = profit + p;
@@ -81,6 +88,7 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
     lvlTwo,
     totalProfit,
     getBalances,
+    stakesLoading,
     // levelOne,
   }
   

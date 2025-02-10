@@ -36,12 +36,13 @@ const LevelOne = ({setStage}: T.ModalProps) => {
   useEffect(() => {
     const ref = localStorage.getItem(refKey);
     if (ref) {
+      console.log({ref})
       setRefCode(ref)
     }
   }, [])
   
   const checkLowBalance = () => {
-    if (Number(bal) < minAllow) {
+    if (Number(bal) <= 0) {
       setLowBUSD(!!1)
     } else {
       setLowBUSD(!!0);
@@ -74,7 +75,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
       address,
       referral: refCode,
       amount: String(minAllow),
-      place: "modal"
+      place: "Nmodal"
     }
     
     const res = await newReferral(send)
@@ -188,7 +189,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
                 disabled={lowBUSD || lowBNB}
                 className="px-4 py-2 rounded-full bg-green-900 text-white font-semibold hover:bg-green-800"
               >
-                Register
+                Activate with ${minAllow}
               </Button>
             )}
           </div>

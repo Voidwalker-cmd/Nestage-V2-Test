@@ -15,7 +15,6 @@ import {
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {AddIcon} from "@/components/atoms/Icons";
-import {useRouter} from "next/navigation"
 import {useWeb3Store} from "@/store"
 import {getBUSD, useBNB} from "@/hooks/useBalance"
 import {SITE_MODE} from "@/config"
@@ -30,10 +29,9 @@ import {useUserContext} from "@/context/UserContext";
 export const btnStateModal = signal("Initializing");
 
 const LevelOneNewStakeModal = ({size}: { size: string }) => {
-  const router = useRouter();
   const address = useWeb3Store((state) => state.address)
   const {balance: bnb, symbol} = useBNB(address);
-  const {stakers} = useUserContext()
+  const {stakers, stakesLoading} = useUserContext()
   
   const [busd, setBusd] = useState<number | string>(0);
   const [hasErr, setHasErr] = useState<boolean>(!!0)
@@ -46,9 +44,10 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
   const [render, setRender] = useState(!!1);
   
   useEffect(() => {
-    const data = sessionStorage.getItem("c6f03c2a-cb01-464d-b0ce-0ed3656b5d24");
-    if (data && size === "icon") {
-      setRender(!!0)
+    if (stakers && !stakesLoading) {
+      if (!stakers.length) {
+        setRender(!!0)
+      }
     }
   }, [stakers]);
   
@@ -122,7 +121,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
     } else {
       btnStateModal.value = "Redirecting"
       // setLoading(!!0)
-      router.refresh()
+      window.location.reload()
     }
   }
   

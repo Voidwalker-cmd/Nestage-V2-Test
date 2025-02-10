@@ -4,19 +4,19 @@ import {BrowserProvider, Contract, parseUnits} from "ethers";
 import * as T from "@/types";
 import {Axios} from "@/lib/Axios/client";
 import {SiteUrl} from "@/functions/site";
-import {mAddress, nestageAddress, NETWORK_MODE, nullAddress, tAddress,} from "@/config";
+import {mAddress, nestageAddress, NETWORK_MODE, nullAddress, refKey, tAddress,} from "@/config";
 import BUSD_ABI from "@/web3/NestageNw.json";
 import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import {btnState} from "@/components/molecules/LevelOne";
 import {btnStateModal} from "@/components/organisms/LevelOneNewStakeModal";
 // import { useAuthStore } from "@/store/auth";
 
-const updateBtnState = (newValue: string, place: string) => {
-  if (place !== "modal") {
+const updateBtnState = (newValue: string) => {
     btnState.value = newValue;
-  } else {
+};
+
+const updateBtnStateTwo = (newValue: string) => {
     btnStateModal.value = newValue;
-  }
 };
 
 export const contractAddress = NETWORK_MODE === "testnet" ? tAddress : mAddress;
@@ -85,10 +85,11 @@ export const newStake = async (form: T.StakingData) => {
     if (!window.location.pathname.includes("/user/")) {
       const refCode = localStorage.getItem("ref");
       if (refCode) {
-        const {data: drefs, status} = await Axios.get<T.getRefByCodeResponse>(
+        const {data: raw, status} = await Axios.get<T.getRefByCodeResponse>(
           `referral?withcode=${refCode}`
         );
         if (status === 200) {
+          const {data: drefs} = raw
           fstUplineAddress = drefs?.address;
           
           const bonus =
@@ -137,7 +138,8 @@ export const newStake = async (form: T.StakingData) => {
       );
       
       try {
-        updateBtnState("Awaiting Approval", place);
+        if (place !== "modal") updateBtnState("Awaiting Approval")
+        if (place === "modal") updateBtnStateTwo("Awaiting Approval");
         await busdContract.allowance(await signer.getAddress(), nestageAddress);
         
         // if (!currentAllowance.lt(amount)) {
@@ -163,11 +165,13 @@ export const newStake = async (form: T.StakingData) => {
           payUpline.uplineAddress,
           payUpline.pay
         );
-        updateBtnState("Approved", place);
+        if (place !== "modal") updateBtnState("Approved")
+        if (place === "modal") updateBtnStateTwo("Approved");
         
         const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
         
-        updateBtnState("Awaiting Confirmation", place);
+        if (place !== "modal") updateBtnState("Awaiting Confirmation")
+        if (place === "modal") updateBtnStateTwo("Awaiting Confirmation");
         
         const tx = await startNewStake(
           amt,
@@ -186,8 +190,8 @@ export const newStake = async (form: T.StakingData) => {
         //   dispatch(setTransactionState({ state: "paying" }));
         
         await tx.wait();
-        updateBtnState("Confirming", place);
-        
+        if (place !== "modal") updateBtnState("Confirming")
+        if (place === "modal") updateBtnStateTwo("Confirming");
         const {data: Tx} = await Axios.get(`tx?hash=${tx.hash}`);
         // await dispatch(validateHash({ txHash: tx.hash }));
         
@@ -200,16 +204,18 @@ export const newStake = async (form: T.StakingData) => {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
             await Axios.post("tx", {type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress}});
-            updateBtnState("Confirmed", place);
+            if (place !== "modal") updateBtnState("Confirmed")
+            if (place === "modal") updateBtnStateTwo("Confirmed");
           }
         } else {
           if (Tx.data.status === "1") {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
             await Axios.post("tx", {type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress}});
-            updateBtnState("Confirmed", place);
+            if (place !== "modal") updateBtnState("Confirmed")
+            if (place === "modal") updateBtnStateTwo("Confirmed");
           }
-          
+          localStorage.removeItem(refKey)
         }
         return {
           status: "success",
@@ -222,16 +228,18 @@ export const newStake = async (form: T.StakingData) => {
         // };
         // }
       } catch (error) {
-        console.log(typeof error);
+        // console.log(typeof error);
         console.error("Error calling startNewStake:", error);
-        updateBtnState("Initializing", place);
+        if (place !== "modal") updateBtnState("Initializing")
+        if (place === "modal") updateBtnStateTwo("Initializing");
         return {
           status: "error",
           errorMessage: "Error processing your transaction!",
         };
       }
     } else {
-      updateBtnState("Initializing", place);
+      if (place !== "modal") updateBtnState("Initializing")
+      if (place === "modal") updateBtnStateTwo("Initializing");
       console.error("Dapp is not installed!");
       return {
         status: "error",
@@ -239,7 +247,8 @@ export const newStake = async (form: T.StakingData) => {
       };
     }
   } catch (error) {
-    updateBtnState("Initializing", place);
+    if (place !== "modal") updateBtnState("Initializing")
+    if (place === "modal") updateBtnStateTwo("Initializing");
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,

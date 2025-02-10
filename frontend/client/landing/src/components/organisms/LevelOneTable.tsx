@@ -182,8 +182,8 @@ export const columns: ColumnDef<T.Investment>[] = [
 
 const LevelOneTable = () => {
   const address = useWeb3Store((state) => state.address);
-  const {stakers, balLoading} = useUserContext()
-  const data = stakers.length ? getLevelOne(stakers, address) : []
+  const {stakers, balLoading, stakesLoading} = useUserContext()
+  const data = stakers && !stakesLoading ? stakers.length ? getLevelOne(stakers, address) : [] : []
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})

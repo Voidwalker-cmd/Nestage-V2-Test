@@ -46,7 +46,7 @@ const UserIndex = () => {
             <CardHeader>
               <CardDescription>Status</CardDescription>
               <CardTitle>
-                <LevelStatus levelOne={lvlOne} levelTwo={lvlTwo}/>
+                <LevelStatus levelOne={lvlOne} levelTwo={user.code}/>
               </CardTitle>
             </CardHeader>
           </Card>

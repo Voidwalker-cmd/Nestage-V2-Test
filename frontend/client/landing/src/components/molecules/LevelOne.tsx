@@ -95,7 +95,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
       planId: 0,
       uuid,
       address,
-      place: "modal",
+      place: "Nmodal",
     };
     setLoading(!!1)
     const res = await newStake(send)

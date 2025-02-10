@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {useRouter} from "next/navigation";
 import {useWeb3Store} from "@/store";
 import {getBUSD, useBNB} from "@/hooks/useBalance";
 import {refKey, SITE_MODE} from "@/config";
@@ -26,7 +25,6 @@ import {useActiveAccount} from "thirdweb/react";
 export const btnStateTwoModal = signal("Initializing");
 
 const LevelTwoNewRefModal = () => {
-  const router = useRouter();
   const addr = useWeb3Store((state) => state.address);
   const activeAccount = useActiveAccount();
   const [address, setAddress] = useState(() => addr ?? activeAccount?.address ?? "");
@@ -121,7 +119,7 @@ const LevelTwoNewRefModal = () => {
     } else {
       btnStateTwoModal.value = "Redirecting"
       // setLoading(!!0)
-      router.refresh()
+      window.location.reload()
     }
   }
   
