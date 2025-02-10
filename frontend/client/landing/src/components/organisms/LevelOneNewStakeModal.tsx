@@ -44,7 +44,11 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
   const [render, setRender] = useState(!!1);
   
   useEffect(() => {
-    stakers && !stakesLoading ? !stakers.length ? setRender(!!0) : [] : []
+    if (stakers && !stakesLoading) {
+      if (!stakers.length) {
+        setRender(!!0)
+      }
+    }
   }, [stakers]);
   
   useEffect(() => {

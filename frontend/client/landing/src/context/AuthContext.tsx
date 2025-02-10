@@ -128,7 +128,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   }, [rawStakers])
   
   
-  const {data: stakeItems, error: stakeError, isLoading: stakesLoading, refetch} = useQuery<any[]>({
+  const {data: stakeItems, error: stakeError, isLoading: stakesLoading, refetch} = useQuery<T.ParsedStakersData[]>({
     queryKey: ["stakeItmes", savedAddress], // Cache based on user address
     queryFn: () => fetchStakers(allStakers),
     enabled: !!savedAddress, // Fetch only if wallet is connected
