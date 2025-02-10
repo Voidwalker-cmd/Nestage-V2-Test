@@ -112,7 +112,8 @@ export const newReferral = async (form: T.refData) => {
         //     await signer.getAddress(),
         //     nestageAddress
         //   );
-        place !== 'modal' ? updateBtnState("Awaiting Approval") : updateBtnStateTwo("Awaiting Approval");
+        if (place !== 'modal') updateBtnState("Awaiting Approval")
+        if (place === 'modal') updateBtnStateTwo("Awaiting Approval");
         
         const approvalTx = await busdContract.approve(nestageAddress, xamt);
         //   dispatch(setTransactionState({ state: "approving" }));
@@ -130,17 +131,20 @@ export const newReferral = async (form: T.refData) => {
           info![1],
           xamt
         );
-        place !== 'modal' ? updateBtnState("Approved") : updateBtnStateTwo("Approved");
+        if (place !== 'modal') updateBtnState("Approved")
+        if (place === 'modal') updateBtnStateTwo("Approved");
         
         const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
-        place !== 'modal' ? updateBtnState("Awaiting Confirmation") : updateBtnStateTwo("Awaiting Confirmation");
+        if (place !== 'modal') updateBtnState("Awaiting Confirmation")
+        if (place === 'modal') updateBtnStateTwo("Awaiting Confirmation");
         const tx = await startNewReferral(info![0], info![1], xamt, {
           gasLimit,
         });
         //   dispatch(setTransactionState({ state: "paying" }));
         
         await tx.wait();
-        place !== 'modal' ? updateBtnState("Confirming") : updateBtnStateTwo("Confirming");
+        if (place !== 'modal') updateBtnState("Confirming")
+        if (place === 'modal') updateBtnStateTwo("Confirming");
         const {data: Tx} = await Axios.get(`tx?hash=${tx.hash}`);
         
         // const Tx: T.bscscan = verifiedTx?.payload;
@@ -164,10 +168,12 @@ export const newReferral = async (form: T.refData) => {
           perform = !!1
         }
         if (perform) {
-          place !== 'modal' ? updateBtnState("Confirmed") : updateBtnStateTwo("Confirmed");
+          if (place !== 'modal') updateBtnState("Confirmed")
+          if (place === 'modal') updateBtnStateTwo("Confirmed");
           if (createNewRef) {
             await (async () => {
-              place !== 'modal' ? updateBtnState("Finalizing") : updateBtnStateTwo("Finalizing");
+              if (place !== 'modal') updateBtnState("Finalizing")
+              if (place === 'modal') updateBtnStateTwo("Finalizing");
               const code = refCode === null ? null : String(refCode);
               let details: T.createRefParams = {address: address};
               details = code !== null ? {...details, code} : {...details};
@@ -199,7 +205,8 @@ export const newReferral = async (form: T.refData) => {
         
         //   dispatch(saveStat({ type: "levelTwo", amount }));
         //   dispatch(setTransactionState({ state: "payed" }));
-        place !== 'modal' ? updateBtnState("Completed") : updateBtnStateTwo("Completed");
+        if (place !== 'modal') updateBtnState("Completed")
+        if (place === 'modal') updateBtnStateTwo("Completed");
         return {
           status: "success",
         };
@@ -212,7 +219,8 @@ export const newReferral = async (form: T.refData) => {
         //     sessionStorage.removeItem("temp");
         // };
         // if (idx) rm();
-        place !== 'modal' ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
+        if (place !== 'modal') updateBtnState("Initializing")
+        if (place === 'modal') updateBtnStateTwo("Initializing");
         return {
           status: "error",
           errorMessage: "Error!",
@@ -220,14 +228,16 @@ export const newReferral = async (form: T.refData) => {
       }
     } else {
       console.error("Dapp is not installed!");
-      place !== 'modal' ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
+      if (place !== 'modal') updateBtnState("Initializing")
+      if (place === 'modal') updateBtnStateTwo("Initializing");
       return {
         status: "error",
         errorMessage: "Dapp not found!",
       };
     }
   } catch (error) {
-    place !== 'modal' ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
+    if (place !== 'modal') updateBtnState("Initializing")
+    if (place === 'modal') updateBtnStateTwo("Initializing");
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,

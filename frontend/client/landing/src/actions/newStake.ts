@@ -138,7 +138,8 @@ export const newStake = async (form: T.StakingData) => {
       );
       
       try {
-        place !== "modal" ? updateBtnState("Awaiting Approval") : updateBtnStateTwo("Awaiting Approval");
+        if (place !== "modal") updateBtnState("Awaiting Approval")
+        if (place === "modal") updateBtnStateTwo("Awaiting Approval");
         await busdContract.allowance(await signer.getAddress(), nestageAddress);
         
         // if (!currentAllowance.lt(amount)) {
@@ -164,11 +165,13 @@ export const newStake = async (form: T.StakingData) => {
           payUpline.uplineAddress,
           payUpline.pay
         );
-        place !== "modal" ? updateBtnState("Approved") : updateBtnStateTwo("Approved");
+        if (place !== "modal") updateBtnState("Approved")
+        if (place === "modal") updateBtnStateTwo("Approved");
         
         const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
         
-        place !== "modal" ? updateBtnState("Awaiting Confirmation") : updateBtnStateTwo("Awaiting Confirmation");
+        if (place !== "modal") updateBtnState("Awaiting Confirmation")
+        if (place === "modal") updateBtnStateTwo("Awaiting Confirmation");
         
         const tx = await startNewStake(
           amt,
@@ -187,7 +190,8 @@ export const newStake = async (form: T.StakingData) => {
         //   dispatch(setTransactionState({ state: "paying" }));
         
         await tx.wait();
-        place !== "modal" ? updateBtnState("Confirming") : updateBtnStateTwo("Confirming");
+        if (place !== "modal") updateBtnState("Confirming")
+        if (place === "modal") updateBtnStateTwo("Confirming");
         const {data: Tx} = await Axios.get(`tx?hash=${tx.hash}`);
         // await dispatch(validateHash({ txHash: tx.hash }));
         
@@ -200,14 +204,16 @@ export const newStake = async (form: T.StakingData) => {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
             await Axios.post("tx", {type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress}});
-            place !== "modal" ? updateBtnState("Confirmed") : updateBtnStateTwo("Confirmed");
+            if (place !== "modal") updateBtnState("Confirmed")
+            if (place === "modal") updateBtnStateTwo("Confirmed");
           }
         } else {
           if (Tx.data.status === "1") {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
             await Axios.post("tx", {type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress}});
-            place !== "modal" ? updateBtnState("Confirmed") : updateBtnStateTwo("Confirmed");
+            if (place !== "modal") updateBtnState("Confirmed")
+            if (place === "modal") updateBtnStateTwo("Confirmed");
           }
           localStorage.removeItem(refKey)
         }
@@ -224,14 +230,16 @@ export const newStake = async (form: T.StakingData) => {
       } catch (error) {
         // console.log(typeof error);
         console.error("Error calling startNewStake:", error);
-        place !== "modal" ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
+        if (place !== "modal") updateBtnState("Initializing")
+        if (place === "modal") updateBtnStateTwo("Initializing");
         return {
           status: "error",
           errorMessage: "Error processing your transaction!",
         };
       }
     } else {
-      place !== "modal" ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
+      if (place !== "modal") updateBtnState("Initializing")
+      if (place === "modal") updateBtnStateTwo("Initializing");
       console.error("Dapp is not installed!");
       return {
         status: "error",
@@ -239,7 +247,8 @@ export const newStake = async (form: T.StakingData) => {
       };
     }
   } catch (error) {
-    place !== "modal" ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
+    if (place !== "modal") updateBtnState("Initializing")
+    if (place === "modal") updateBtnStateTwo("Initializing");
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,
