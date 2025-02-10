@@ -122,9 +122,14 @@ export interface getRefResponse {
   downlines: Downline;
 }
 
-export interface getRefByCodeResponse
+export interface rawRetRefByCodeResponse
   extends Omit<getRefResponse, "downlines"> {
   additionalProperty?: string;
+}
+
+export interface getRefByCodeResponse {
+  data: rawRetRefByCodeResponse;
+  status: number
 }
 
 export interface getSelfRefResponse extends getRefResponse {

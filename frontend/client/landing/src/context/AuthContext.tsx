@@ -2,15 +2,25 @@
 
 import {createContext, useContext, useEffect, useState} from 'react';
 import {useParams, usePathname, useRouter} from 'next/navigation';
-import {useActiveAccount, useActiveWalletConnectionStatus, useAutoConnect} from "thirdweb/react";
+import {useActiveAccount, useActiveWalletConnectionStatus, useAutoConnect, useReadContract} from "thirdweb/react";
 
 import {Wallet} from 'thirdweb/wallets';
 import Preloader from '@/components/molecules/Loader';
 
-import {createThirdwebClient} from "thirdweb";
+import {createThirdwebClient, getContract} from "thirdweb";
 import {getAuth} from "@/actions";
 import {useWeb3Store} from "@/store";
 import {useAuthStore} from "@/store/auth";
+import {useQuery} from "@tanstack/react-query";
+
+// import { useWeb3Store } from "@/store";
+import * as T from "../types";
+import {units} from "@/lib";
+import {toBigInt} from "ethers";
+import {bsc, bscTestnet} from "thirdweb/chains";
+// import {client} from "@/components/molecules/ConnectWallet";
+import {nestageAddress, NETWORK_MODE} from "@/config";
+// import {useAuthStore} from "@/store/auth";
 
 export const client = createThirdwebClient({
   clientId: "520d55c9ed1eb0dc52af37d81000ce76",
@@ -24,12 +34,47 @@ interface AppContextType {
   setIsLoading: (value: boolean) => void;
   isAuth: boolean
   setDashboardDisconneted: (value: boolean) => void;
+  stakeItems: [] | T.ParsedStakersData[] | undefined;
+  stakeError: Error | null
+  stakesLoading: boolean;
+  refetch: () => void
+}
+
+export interface rawStakers {
+  id: bigint;
+  amount: bigint;
+  startDate: bigint;
+  endDate: bigint;
+  profit: bigint;
+  staker: string
+}
+
+async function fetchStakers(stakers: rawStakers[] | []) {
+  if (!stakers) return []
+  try {
+    const parsedStakers: T.ParsedStakersData[] | undefined = stakers?.map(
+      (staker): T.ParsedStakersData => ({
+        staker: staker.staker,
+        amount: units(staker.amount, "ether"),
+        startDate: Number(toBigInt(staker.startDate)),
+        endDate: Number(toBigInt(staker.endDate)),
+        profit: units(staker.profit, "ether"),
+      })
+    );
+    // console.log({parsedStakers})
+    // setStakers(parsedStakers || [])
+    return parsedStakers || [];
+  } catch (error) {
+    console.log(error);
+    //   dispatch(setCheckState({ state: "not-found" }));
+    // setStakers([])
+    return []
+  }
 }
 
 const AuthContext = createContext<AppContextType | undefined>(undefined);
 
 export const AuthProvider = ({children}: { children: React.ReactNode }) => {
-  
   const status: "connected" | "disconnected" | "connecting" = useActiveWalletConnectionStatus();
   const activeAccount = useActiveAccount();
   const setUserAddress = useWeb3Store((state) => state.setAddress);
@@ -46,8 +91,9 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   const [autoConnect, setAutoConnect] = useState(!!1);
   const [checking, setChecking] = useState(!!1);
   const [isAuth, setIsAuth] = useState(!!0);
+  const [allStakers, setAllStakers] = useState<rawStakers[]>([]);
   const [dashboardDisconneted, setDashboardDisconneted] = useState(!!0);
- 
+  
   useAutoConnect({
     client,
     onConnect: (w: Wallet) => {
@@ -56,6 +102,38 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       setUserAddress(address)
       setAuth(!!1)
     },
+  });
+  
+  // // const setStakers = useAuthStore((state) => state.setStakers)
+  const contract = getContract({
+    client: client,
+    address: nestageAddress!,
+    chain: NETWORK_MODE === "mainnet" ? bsc : bscTestnet,
+  });
+  // const stakers: T.stakersData[] = await contract?.call("getAllStakes");
+  
+  const {data: rawStakers} = useReadContract({
+    contract,
+    method:
+      "function getAllStakes() view returns ((uint256 id, uint256 amount, uint256 startDate, uint256 endDate, uint256 profit, address staker)[])",
+    params: [],
+  });
+  
+  useEffect(() => {
+    if (!rawStakers) {
+      setAllStakers([])
+    } else if (rawStakers) {
+      setAllStakers([...rawStakers])
+    }
+  }, [rawStakers])
+  
+  
+  const {data: stakeItems, error: stakeError, isLoading: stakesLoading, refetch} = useQuery<any[]>({
+    queryKey: ["stakeItmes", savedAddress], // Cache based on user address
+    queryFn: () => fetchStakers(allStakers),
+    enabled: !!savedAddress, // Fetch only if wallet is connected
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    refetchInterval: 30000, // Refetch every 30s
   });
   
   const checkAuth = async (address: string) => {
@@ -180,7 +258,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     checking,
     setIsLoading,
     isAuth,
-    setDashboardDisconneted
+    setDashboardDisconneted,
+    stakeItems, stakeError, stakesLoading, refetch
   }
   
   return (
@@ -188,7 +267,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       value={
         value}
     >
-      {children}</AuthContext.Provider>
+      {children}
+    </AuthContext.Provider>
   )
 }
 

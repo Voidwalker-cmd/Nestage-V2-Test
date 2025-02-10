@@ -7,14 +7,17 @@ import {saveRef} from "@/functions/saveRef";
 import {refKey} from "@/config";
 import {AuthProvider} from "@/context/AuthContext";
 import {AppProvider} from "@/context/AppContext";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
-export default function Template({ children }: { children: React.ReactNode }) {
+export default function Template({children}: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+  
   const [isClient, setIsClient] = useState(false);
-
+  
   const SaveRef = async (ref: string) => {
-    const { data, status } = await saveRef(ref);
+    const {data, status} = await saveRef(ref);
     if (status === 200) {
-      localStorage.setItem(refKey, data);
+      localStorage.setItem(refKey, data.code);
     }
   };
   
@@ -41,34 +44,36 @@ export default function Template({ children }: { children: React.ReactNode }) {
   // useEffect(() => {
   //   PINGSERVER()
   // }, [])
-
+  
   useEffect(() => {
     if (isClient) {
       const params = new URLSearchParams(window.location.search);
       const ref = params.get("ref");
-
+      
       if (ref) {
         SaveRef(ref as string);
       }
     }
   }, [isClient]);
-
+  
   useEffect(() => {
     setIsClient(true);
   }, []);
-
+  
   if (!isClient) {
-    return <Preloader />;
+    return <Preloader/>;
   }
-
+  
   return (
     <>
       <ThirdwebProvider>
-        <AuthProvider>
-          <AppProvider>
-          {children}
-          </AppProvider>
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <AppProvider>
+              {children}
+            </AppProvider>
+          </AuthProvider>
+        </QueryClientProvider>
       </ThirdwebProvider>
     </>
   );

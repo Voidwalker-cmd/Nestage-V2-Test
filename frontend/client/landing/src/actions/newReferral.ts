@@ -3,21 +3,21 @@
 import * as T from "@/types";
 import {contractAddress, getAdminAddress} from "./newStake";
 import {BrowserProvider, Contract, parseUnits} from "ethers";
-import {nestageAddress, NETWORK_MODE} from "@/config";
+import {nestageAddress, NETWORK_MODE, refKey} from "@/config";
 import BUSD_ABI from "@/web3/NestageNw.json";
 import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import {btnStateTwo} from "@/components/molecules/LevelTwo";
 import {Axios} from "@/lib/Axios/client";
 import {btnStateTwoModal} from "@/components/organisms/LevelTwoNewRefModal";
 
-const updateBtnState = (newValue: string, place: string) => {
-    if (place !== "modal") {
-      btnStateTwo.value = newValue;
-    } else {
-      btnStateTwoModal.value = newValue;
-    }
-  }
-;
+const updateBtnState = (newValue: string) => {
+  btnStateTwo.value = newValue;
+};
+
+const updateBtnStateTwo = (newValue: string) => {
+  console.log("yu")
+  btnStateTwoModal.value = newValue;
+};
 
 export const newReferral = async (form: T.refData) => {
   // dispatch(getWallets({ blank: 0 }));
@@ -56,10 +56,12 @@ export const newReferral = async (form: T.refData) => {
     
     if (refCode) {
       // const refs = await dispatch(getRefByCode({ code: refCode }));
-      const {data: drefs, status} = await Axios.get<T.getRefByCodeResponse>(
+      const {data: raw, status} = await Axios.get<T.getRefByCodeResponse>(
         `referral?withcode=${refCode}`
       );
       if (status === 200) {
+        const {data: drefs} = raw
+        console.log({drefs})
         const up = drefs?.upline;
         const fstUplineAddress = drefs?.address;
         const list = drefs?.uplines;
@@ -110,7 +112,7 @@ export const newReferral = async (form: T.refData) => {
         //     await signer.getAddress(),
         //     nestageAddress
         //   );
-        updateBtnState("Awaiting Approval", place);
+        place !== 'modal' ? updateBtnState("Awaiting Approval") : updateBtnStateTwo("Awaiting Approval");
         
         const approvalTx = await busdContract.approve(nestageAddress, xamt);
         //   dispatch(setTransactionState({ state: "approving" }));
@@ -128,19 +130,17 @@ export const newReferral = async (form: T.refData) => {
           info![1],
           xamt
         );
-        
-        updateBtnState("Approved", place);
+        place !== 'modal' ? updateBtnState("Approved") : updateBtnStateTwo("Approved");
         
         const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
-        
-        updateBtnState("Awaiting Confirmation", place);
+        place !== 'modal' ? updateBtnState("Awaiting Confirmation") : updateBtnStateTwo("Awaiting Confirmation");
         const tx = await startNewReferral(info![0], info![1], xamt, {
           gasLimit,
         });
         //   dispatch(setTransactionState({ state: "paying" }));
         
         await tx.wait();
-        updateBtnState("Confirming", place);
+        place !== 'modal' ? updateBtnState("Confirming") : updateBtnStateTwo("Confirming");
         const {data: Tx} = await Axios.get(`tx?hash=${tx.hash}`);
         
         // const Tx: T.bscscan = verifiedTx?.payload;
@@ -154,18 +154,20 @@ export const newReferral = async (form: T.refData) => {
         let userPay: { address: string; amount: string }[] = [];
         let adminPay = {address: refAdmin, amount: ""};
         
+        console.log({Tx})
+        
         if (NETWORK_MODE === 'mainnet') {
           if (Tx.data.result.status === "1") {
             perform = !!1
           }
-        } else if (Tx.status === "1") {
+        } else if (Tx.data.status === "1") {
           perform = !!1
         }
         if (perform) {
-          updateBtnState("Confirmed", place);
+          place !== 'modal' ? updateBtnState("Confirmed") : updateBtnStateTwo("Confirmed");
           if (createNewRef) {
-            (async () => {
-              updateBtnState("Finalizing", place);
+            await (async () => {
+              place !== 'modal' ? updateBtnState("Finalizing") : updateBtnStateTwo("Finalizing");
               const code = refCode === null ? null : String(refCode);
               let details: T.createRefParams = {address: address};
               details = code !== null ? {...details, code} : {...details};
@@ -191,12 +193,13 @@ export const newReferral = async (form: T.refData) => {
           }
           await Axios.post("referralPay", {adminPay, userPay});
           await Axios.post("tx", {type: "levelTwo", amount, address, refBonus: {hasRef: !!0}});
+          localStorage.removeItem(refKey)
         }
         
         
         //   dispatch(saveStat({ type: "levelTwo", amount }));
         //   dispatch(setTransactionState({ state: "payed" }));
-        updateBtnState("Completed", place);
+        place !== 'modal' ? updateBtnState("Completed") : updateBtnStateTwo("Completed");
         return {
           status: "success",
         };
@@ -209,7 +212,7 @@ export const newReferral = async (form: T.refData) => {
         //     sessionStorage.removeItem("temp");
         // };
         // if (idx) rm();
-        updateBtnState("Initializing", place);
+        place !== 'modal' ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
         return {
           status: "error",
           errorMessage: "Error!",
@@ -217,14 +220,14 @@ export const newReferral = async (form: T.refData) => {
       }
     } else {
       console.error("Dapp is not installed!");
-      updateBtnState("Initializing", place);
+      place !== 'modal' ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
       return {
         status: "error",
         errorMessage: "Dapp not found!",
       };
     }
   } catch (error) {
-    updateBtnState("Initializing", place);
+    place !== 'modal' ? updateBtnState("Initializing") : updateBtnStateTwo("Initializing");
     const errorMessage = (error as Error).message;
     // result = {
     //   isLoading: !!0,

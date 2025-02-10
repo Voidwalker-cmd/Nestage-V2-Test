@@ -12,12 +12,12 @@ export async function GET(request: NextRequest) {
   const mode = request.nextUrl.searchParams.get("mode");
   
   // console.log({ withCode, address, refCode });
-
+  
   // try {
   let result, statusCode;
   if (address !== null) {
     try {
-      const { data: d, status: s } = await ServerAxios.get(
+      const {data: d, status: s} = await ServerAxios.get(
         `get-referral?ref=${address}`
       );
       result = d;
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     }
   } else if (withCode !== null) {
     try {
-      const { data: d, status: s } = await ServerAxios.get(
+      const {data: d, status: s} = await ServerAxios.get(
         `g-referral?code=${withCode}`
       );
       result = d;
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     }
   } else if (refCode !== null) {
     try {
-      const { data: d, status: s } = await ServerAxios.get(
+      const {data: d, status: s} = await ServerAxios.get(
         `get-ref?ref=${refCode}`
       );
       result = d;
@@ -57,8 +57,9 @@ export async function GET(request: NextRequest) {
   } else if (mode !== null) {
     if (mode === 'pay') {
       try {
+        const ad = request.nextUrl.searchParams.get("user");
         const {data, status} = await ServerAxios.get(
-          `referral/pay?address=${address}`
+          `referral/pay?address=${ad}`
         );
         result = data.total;
         statusCode = status;
@@ -84,7 +85,7 @@ export async function GET(request: NextRequest) {
       }
     }
   }
-
+  
   // console.log({ result, statusCode });
   // // Create the response
   return new Response(
@@ -97,7 +98,7 @@ export async function GET(request: NextRequest) {
   // } catch (err) {
   // const e = (err as Error).message;
   // console.log({e})
-
+  
   //   return new Response(JSON.stringify({ error: e.response.data.error }), {
   //     status: 500,
   //     headers: {
@@ -109,13 +110,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-
-  const { address, code } = body;
-
+  
+  const {address, code} = body;
+  
   let result, statusCode;
-
+  
   try {
-    const { data: d, status: s } = await ServerAxios.post(`referral`, {
+    const {data: d, status: s} = await ServerAxios.post(`referral`, {
       address,
       code
     });
