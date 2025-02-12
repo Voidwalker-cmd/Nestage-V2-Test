@@ -1,18 +1,11 @@
 "use client"
 
-import { Static } from "@/assets/image"
+import {Static} from "@/assets/image"
 import Image from "next/image"
-import { MenuIcon } from "../atoms/Icons"
+import {LanguageIcon, MenuIcon} from "../atoms/Icons"
 import useDeviceSize from "@/hooks/useMediaQuery"
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet"
 import ConnectWallet from "../molecules/ConnectWallet"
 
 
@@ -25,13 +18,18 @@ const Nav = () => {
         <h2 className="capitalize text-white tracking-wide lg:tracking-wider font-semibold lg:font-bold text-lg lg:text-2xl">nestage</h2>
       </div>
       <div className="text-white items-center gap-2 justify-center hidden lg:flex">
-        <p className="text-semibold">Roadmap</p>
-        <p className="text-semibold">Terms of use</p>
-        <p className="text-semibold">Docs</p>
+        <p
+          className="font-semibold cursor-pointer hover:text-[#8CC34B] hover:font-bold transition-all duration-150">Roadmap</p>
+        <p
+          className="font-semibold cursor-pointer hover:text-[#8CC34B] hover:font-bold transition-all duration-150 border-x-[3px] border-gray-200 px-2">Terms
+          of use</p>
+        <p
+          className="font-semibold cursor-pointer hover:text-[#8CC34B] hover:font-bold transition-all duration-150">Docs</p>
       </div>
       <div className="flex items-center gap-2 justify-center z-10">
         <ConnectWallet />
-        <p className="hidden lg:inline uppercase text-sm px-3 text-white font-semibold">eng</p>
+        <p className="hidden lg:flex gap-2 items-center uppercase text-sm px-3 text-white font-semibold pl-0 lg:pl-2">
+          <LanguageIcon className="size-5"/>eng</p>
         <Sheet>
           <SheetTrigger>
             <MenuIcon className="text-white inline-block lg:hidden ml-3 w-7 h-7" />

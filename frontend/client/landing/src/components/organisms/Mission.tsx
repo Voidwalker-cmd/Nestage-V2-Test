@@ -1,4 +1,4 @@
-import { Static } from "@/assets/image";
+import {Static} from "@/assets/image";
 import Image from "next/image";
 import ConnectWallet from "../molecules/ConnectWallet";
 import useDeviceSize from "@/hooks/useMediaQuery"
@@ -10,11 +10,13 @@ const Mission = () => {
             <section className="overflow-hidden flex flex-col-reverse lg:grid lg:grid-cols-2 items-center justify-center py-5 lg:py-10 lg:pr-5">
                 <div className="p-8 md:p-12 lg:px-16 lg:py-24">
                     <div className="mx-auto max-w-xl text-center sm:text-left">
-                        <h2 className="font-primary text-2xl font-bold text-white md:text-3xl">
+                        <h2 data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" data-aos-offset="300"
+                            className="font-primary text-2xl font-bold text-white md:text-3xl">
                             Nestage Mission
                         </h2>
-
-                        <p className="text-white mt-4 block">
+                        
+                        <p data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" data-aos-offset="300"
+                           className="text-white mt-4 block">
                             Nestages mission is to empower individuals to earn passive income
                             through referrals and smart staking, leveraging blockchain
                             technology. The platform aims to revolutionize affiliate marketing

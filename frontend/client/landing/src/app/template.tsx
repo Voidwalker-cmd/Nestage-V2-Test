@@ -8,6 +8,7 @@ import {refKey} from "@/config";
 import {AuthProvider} from "@/context/AuthContext";
 import {AppProvider} from "@/context/AppContext";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import AosWrapper from "@/components/organisms/AosWrapper";
 
 export default function Template({children}: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -70,7 +71,9 @@ export default function Template({children}: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <AppProvider>
-              {children}
+              <AosWrapper>
+                {children}
+              </AosWrapper>
             </AppProvider>
           </AuthProvider>
         </QueryClientProvider>
