@@ -137,7 +137,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
             showAllWallets={!!0}
             connectButton={{
               label: "Connect Wallet",
-              className: `${state === 'fill' ? "!bg-[#06351C]" : "!bg-transparent"} !inline-flex !items-center !justify-center !gap-2 !whitespace-nowrap !text-sm !transition-colors focus-visible:!outline-none focus-visible:!ring-1 focus-visible:!ring-ring disabled:!? "cursor ":""pointer-events-none disabled:!? "cursor  ":""opacity-50 [&_svg]:!pointer-events-none [&_svg]:!size-4 [&_svg]:!shrink-0 !shadow hover:!bg-[#06351C] hover:!bg-opacity-60 !h-9 !px-4 !rounded-full border !border-gray-500 hover:!border-opacity-100 !py-3 !text-white !font-semibold`,
+              className: `${state === 'fill' ? "!bg-[#06351C]" : "!bg-transparent"} !inline-flex !items-center !justify-center !gap-2 !whitespace-nowrap !text-sm !transition-colors focus-visible:!outline-none focus-visible:!ring-1 focus-visible:!ring-ring disabled:!? "cursor ":""pointer-events-none disabled:!? "cursor  ":""opacity-50 [&_svg]:!pointer-events-none [&_svg]:!size-4 [&_svg]:!shrink-0 !shadow hover:!bg-[#06351C] hover:!bg-opacity-60 !h-10 !px-4 !rounded-full border !border-gray-500 hover:!border-opacity-100 !py-3 !text-white !font-semibold`,
               style: {border: '1px solid gray', color: "#ffffff"}
             }}
             detailsButton={{

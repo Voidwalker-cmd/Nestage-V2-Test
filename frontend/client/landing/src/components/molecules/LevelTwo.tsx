@@ -144,25 +144,28 @@ const LevelOne = ({setStage}: T.ModalProps) => {
           </div>
           
           <div className="mb-2 flex items-center justify-start gap-2">
-            <label className="block text-sm font-medium mb-1">Wallet balance:</label>
+            <label className="block text-sm font-medium mb-1">BUSD balance:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2">
-              <span className="flex flex-col lg:flex-row justify-center items-center gap-1">
                 <span>
-                    <span className="pr-0.5">BUSD</span>
                   {Formatter(busd, {
                     type: "d",
                     decimalOptions: {n: 2, m: 4},
                   })}
                 </span>
-                <span className="px-0.5 hidden lg:inline"> | </span>
-                <span>
-                    <span className="pr-0.5">{symbol}</span>
-                  {Formatter(bal, {
-                    type: "d",
-                    decimalOptions: {n: 4, m: 8},
-                  })}
-                </span>
-              </span>
+            </div>
+          </div>
+          
+          <div className="mb-2 flex items-center justify-start gap-2">
+            <label className="block text-sm font-medium mb-1">{symbol} balance:</label>
+            <div className="flex items-center font-medium justify-between px-4 py-2">
+                            <span className="flex flex-col lg:flex-row justify-center items-center gap-1">
+                                <span>
+                                  {Formatter(bal, {
+                                    type: "d",
+                                    decimalOptions: {n: 4, m: 8},
+                                  })}
+                                </span>
+                            </span>
             </div>
           </div>
           

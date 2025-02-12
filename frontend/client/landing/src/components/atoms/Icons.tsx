@@ -1,4 +1,4 @@
-import {Bell, ChevronLeft, ChevronRight, Copy, CopyCheck, Menu, Plus, X} from "lucide-react"
+import {Bell, ChevronLeft, ChevronRight, Copy, CopyCheck, Languages, Menu, Plus, X} from "lucide-react"
 import * as T from "@/types";
 import {FC} from "react"
 import {SocialIcon as SI} from 'react-social-icons'
@@ -33,6 +33,10 @@ export const LeftIcon: FC<T.IconProps> = ({className}) => {
 
 export const RightIcon: FC<T.IconProps> = ({className}) => {
   return <ChevronRight className={className}/>;
+};
+
+export const LanguageIcon: FC<T.IconProps> = ({className}) => {
+  return <Languages className={className}/>;
 };
 
 // Social Icons
