@@ -209,3 +209,8 @@ export type Investment = {
   endDate: number
   profit: string
 }
+
+export type tGetTempResponse = {
+  code: string,
+  lvlOne: boolean
+}
