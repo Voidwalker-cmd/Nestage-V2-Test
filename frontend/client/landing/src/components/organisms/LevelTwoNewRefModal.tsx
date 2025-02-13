@@ -21,6 +21,7 @@ import CopyBtn from "@/components/molecules/CopyBtn";
 import {Loader2} from "lucide-react";
 import {signal} from "@preact/signals-react";
 import {useActiveAccount} from "thirdweb/react";
+import {getTempRef} from "@/actions";
 
 export const btnStateTwoModal = signal("Initializing");
 
@@ -46,14 +47,20 @@ const LevelTwoNewRefModal = () => {
   const [refCode, setRefCode] = useState<string>("");
   
   useEffect(() => {
-    const ref = localStorage.getItem(refKey);
-    if (ref) {
-      setRefCode(ref)
+    async function I() {
+      const checkTemp = await getTempRef(address)
+      
+      const ref = localStorage.getItem(refKey) ?? checkTemp.code ?? "";
+      if (ref) {
+        setRefCode(ref)
+      }
     }
-       if (!addr && activeAccount?.address) {
-        setAddress(activeAccount.address);
+    if (!addr && activeAccount?.address) {
+      setAddress(activeAccount.address);
     }
-}, [activeAccount]);
+    
+    I()
+  }, [activeAccount]);
   
   useEffect(() => {
     setBnb(balance);  // Always a valid number (default 0)
@@ -168,7 +175,13 @@ const LevelTwoNewRefModal = () => {
             Activate to get your referral code/link and start referring users to earn.
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
+        <div className="py-5">
+          {refCode !== "" ? (
+            <div className="mb-2">
+              <p className="block text-sm font-semibold mb-1 text-center py-2">Upline</p>
+              <div className="w-full px-4 py-2 rounded-lg bg-gray-500 flex justify-center font-medium">{refCode}</div>
+            </div>) : ("")}
+          
           <div className="mb-2 flex items-center justify-start gap-2">
             <label className="block text-sm font-medium mb-1">Wallet address:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2 gap-3">
@@ -178,29 +191,33 @@ const LevelTwoNewRefModal = () => {
           </div>
           
           <div className="mb-2 flex items-center justify-start gap-2">
-            <label className="block text-sm font-medium mb-1">Wallet balance:</label>
+            <label className="block text-sm font-medium mb-1">BUSD balance:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2">
-              <span className="flex flex-col lg:flex-row justify-center items-center gap-1">
                 <span>
-                    <span className="pr-0.5">BUSD</span>
                   {Formatter(busd, {
                     type: "d",
                     decimalOptions: {n: 2, m: 4},
                   })}
                 </span>
-                <span className="px-0.5 hidden lg:inline"> | </span>
-                <span>
-                    <span className="pr-0.5">{symbol}</span>
-                  {Formatter(bnb, {
-                    type: "d",
-                    decimalOptions: {n: 4, m: 8},
-                  })}
-                </span>
-              </span>
+            </div>
+          </div>
+          
+          <div className="mb-2 flex items-center justify-start gap-2">
+            <label className="block text-sm font-medium mb-1">{symbol} balance:</label>
+            <div className="flex items-center font-medium justify-between px-4 py-2">
+                            <span className="flex flex-col lg:flex-row justify-center items-center gap-1">
+                                <span>
+                                  {Formatter(bnb, {
+                                    type: "d",
+                                    decimalOptions: {n: 4, m: 8},
+                                  })}
+                                </span>
+                            </span>
             </div>
           </div>
           
           {hasErr && <span className="py-2 text-sm text-red-500 italic">{err}</span>}
+          
         </div>
         <DialogFooter>
           <div className="flex justify-between items-center w-full">

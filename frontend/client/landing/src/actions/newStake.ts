@@ -2,7 +2,7 @@
 import {BrowserProvider, Contract, parseUnits} from "ethers";
 import * as T from "@/types";
 import {Axios} from "@/lib/Axios/client";
-import {mAddress, nestageAddress, NETWORK_MODE, nullAddress, tAddress,} from "@/config";
+import {mAddress, nestageAddress, NETWORK_MODE, nullAddress, refKey, tAddress,} from "@/config";
 import BUSD_ABI from "@/web3/NestageNw.json";
 import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import {btnState} from "@/components/molecules/LevelOne";
@@ -52,14 +52,17 @@ export const newStake = async (form: T.StakingData) => {
     
     const checkTemp = await getTempRef(address)
     
-    const refCode = localStorage.getItem("ref") ?? checkTemp.code ?? "";
+    const refCode = localStorage.getItem(refKey) ?? checkTemp.code ?? "";
     
     const firstTime = checkTemp.lvlOne
+    
+    console.log({checkTemp, refCode, firstTime})
     
     if (refCode && !firstTime) {
       const {data: raw, status} = await Axios.get<T.getRefByCodeResponse>(
         `referral?withcode=${refCode}`
       );
+      console.log({raw, status})
       if (status === 200) {
         const {data: drefs} = raw
         fstUplineAddress = drefs?.address;
