@@ -177,7 +177,7 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
                 }
               };
               if(ref) SaveRef(ref)
-              if(vRef) await saveTempRef(address, vRef)
+              if(vRef) await saveTempRef(address, vRef);
               // await checkAuth(address);
               // checkLvlOne();
               // await checkLvlTwo(address);
