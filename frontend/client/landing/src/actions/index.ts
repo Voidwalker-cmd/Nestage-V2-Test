@@ -1,4 +1,5 @@
 "use client"
+
 import {Axios} from "@/lib/Axios/client"
 import * as T from "@/types"
 import {defaultRefResponse} from "@/const";
@@ -54,11 +55,32 @@ export const getAuth = async (address: string) => {
 export const getStakersPoints = async (address: string) => {
   try {
     const {data} = await Axios.get(`referral?mode=getPoints&address=${address}`)
-    console.log({data})
     const {status, data: d}: { data: number ; status: number } = data
     return status === 200 ? d as number : 0
   } catch (e) {
     console.log({e})
     return 0
+  }
+}
+
+export const getTempRef = async (address: string) => {
+  try {
+    const {data} = await Axios.get(`referral/temp?address${address}`)
+    const {status, data: d}: {data: T.tGetTempResponse; status: number } = data
+    return status === 200 ? d as T.tGetTempResponse : { code: null, lvlOne: !!0 }
+  } catch (e) {
+    console.log({e})
+    return { code: null, lvlOne: !!0 }
+  }
+}
+
+export const updateTempRef = async (address: string) => {
+  try {
+    const {data} = await Axios.patch(`referral/temp`, {address})
+    const {status}: {status: number } = data
+    return status === 200 ? 'done' : null
+  } catch (e) {
+    console.log({e})
+    return null
   }
 }
