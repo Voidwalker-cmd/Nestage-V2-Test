@@ -32,8 +32,8 @@ export const getStakerInfo = async (
 ) => {
   try {
     const {data} = await Axios.get(`referral?mode=getRef&address=${address}`)
-    const {status, data: d}: { data: T.getSelfRefResponse | string; status: number } = data
-    return status === 200 ? d as T.getSelfRefResponse : defaultRefResponse
+    const {status, data: d}: { data: T.getRefResponse | string; status: number } = data
+    return status === 200 ? d as T.getRefResponse : defaultRefResponse
   } catch (e) {
     console.log({e})
     return defaultRefResponse
@@ -48,5 +48,17 @@ export const getAuth = async (address: string) => {
   } catch (e) {
     console.log({e})
     return !!0
+  }
+}
+
+export const getStakersPoints = async (address: string) => {
+  try {
+    const {data} = await Axios.get(`referral?mode=getPoints&address=${address}`)
+    console.log({data})
+    const {status, data: d}: { data: number ; status: number } = data
+    return status === 200 ? d as number : 0
+  } catch (e) {
+    console.log({e})
+    return 0
   }
 }

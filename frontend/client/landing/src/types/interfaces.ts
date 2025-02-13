@@ -132,17 +132,19 @@ export interface getRefByCodeResponse {
   status: number
 }
 
-export interface getSelfRefResponse extends getRefResponse {
+export interface PointResponse {
   points: number
 }
 
 export interface AuthStore {
   isAuth: boolean;
+  points: number;
   stakers: ParsedStakersData[] | []
-  user: getSelfRefResponse;
+  user: getRefResponse;
   setIsAuth: (isAuth: boolean) => void;
-  setUser: (user: getSelfRefResponse) => void;
+  setUser: (user: getRefResponse) => void;
   setStakers: (stakers: ParsedStakersData[]) => void;
+  setPoints: (points: number) => void;
 }
 
 export interface bscScan {

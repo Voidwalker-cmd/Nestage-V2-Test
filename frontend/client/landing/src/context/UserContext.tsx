@@ -1,7 +1,7 @@
 "use client"
 import {useWeb3Store} from "@/store";
 import {createContext, useContext, useEffect, useState} from "react";
-import {getReferrerProfits, getStakerInfo} from "@/actions";
+import {getReferrerProfits, getStakerInfo, getStakersPoints} from "@/actions";
 import {useAuthStore} from "@/store/auth";
 import {getProfit} from "@/functions";
 import * as T from "@/types"
@@ -24,6 +24,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({children}: { children: React.ReactNode }) => {
   const address = useWeb3Store((state) => state.address);
   const setUser = useAuthStore((state) => state.setUser)
+  const setPoints = useAuthStore((state) => state.setPoints)
   // const stakers = useGetStakers();
   const {stakeItems: stakers, stakesLoading} = useAuthContext()
   
@@ -31,6 +32,8 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
   const getUserInfo = async () => {
     const res = await getStakerInfo(address)
     setUser(res)
+    const points = await getStakersPoints(address)
+    setPoints(points)
   }
   
   const [lvlOne, setLvlOne] = useState(0)

@@ -198,7 +198,7 @@ export const newReferral = async (form: T.refData) => {
             adminPay = {...adminPay, amount: String(amount)};
           }
           await Axios.post("referralPay", {adminPay, userPay});
-          await Axios.post("tx", {type: "levelTwo", amount, address, refBonus: {hasRef: !!0}});
+          await Axios.post("tx", {type: "levelTwo", amount, address, level: "two", refBonus: {hasRef: !!0}});
           localStorage.removeItem(refKey)
         }
         

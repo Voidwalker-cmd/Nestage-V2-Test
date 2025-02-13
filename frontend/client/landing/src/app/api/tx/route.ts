@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
-  const { address, type, amount, refBonus } = body;
+  const { address, type, amount, refBonus, level } = body;
 
   let result, statusCode;
 
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       const { data: da } = await ServerAxios.post(`user`, {
         address,
         amount,
+        level
       });
       result = da;
     }

@@ -9,11 +9,15 @@ export const useAuthStore = create<T.AuthStore>((set) => ({
   
   stakers: [],
   
+  points: 0,
+  
   user: defaultRefResponse,
   
   setIsAuth: (isAuth: boolean) => set({isAuth}),
   
-  setUser: (user: T.getSelfRefResponse) => set({user, ...user}),
+  setUser: (user: T.getRefResponse) => set({user, ...user}),
   
-  setStakers: (stakers: T.ParsedStakersData[]) => set({stakers})
+  setStakers: (stakers: T.ParsedStakersData[]) => set({stakers}),
+  
+  setPoints: (points: number) => set({points})
 }))

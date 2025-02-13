@@ -74,8 +74,20 @@ export async function GET(request: NextRequest) {
         const {data, status} = await ServerAxios.get(
           `user?address=${address}`
         );
-        console.log({data})
         result = data;
+        statusCode = status;
+      } catch (err) {
+        const e = (err as Error).message;
+        console.log({e})
+        result = "No Address found";
+        statusCode = 404;
+      }
+    } else if (mode === "getPoints") {
+      try {
+        const {data, status} = await ServerAxios.get(
+          `user?address=${address}&points=true`
+        );
+        result = data.points;
         statusCode = status;
       } catch (err) {
         const e = (err as Error).message;
