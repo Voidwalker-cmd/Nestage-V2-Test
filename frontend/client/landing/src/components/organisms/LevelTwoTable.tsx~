@@ -9,7 +9,7 @@ import LevelTwoNewRefModal from "@/components/organisms/LevelTwoNewRefModal";
 import {Loader2} from "lucide-react";
 import {useUserContext} from "@/context/UserContext";
 
-const ReferralStats: FC<{ user: T.getRefResponse }> = ({user}) => {
+const ReferralStats: FC<{ user: T.getSelfRefResponse }> = ({user}) => {
   const {balLoading} = useUserContext()
   return (
     <div className="p-0 lg:px-8 lg:py-4 flex items-center justify-center">

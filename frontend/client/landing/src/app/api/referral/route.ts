@@ -11,22 +11,42 @@ export async function GET(request: NextRequest) {
   const refCode = request.nextUrl.searchParams.get("ref");
   const mode = request.nextUrl.searchParams.get("mode");
   
+  console.log({mode})
+  
   // console.log({ withCode, address, refCode });
   
   // try {
   let result, statusCode;
   if (address !== null) {
-    try {
-      const {data: d, status: s} = await ServerAxios.get(
-        `get-referral?ref=${address}`
-      );
-      result = d;
-      statusCode = s;
-    } catch (err) {
-      const e = (err as Error).message;
-      console.log({e})
-      result = "Not found";
-      statusCode = 404;
+    if (mode === "getPoints") {
+      try {
+        const rex = await ServerAxios.get(
+          `user?address=${address}&points=true`
+        );
+        console.log({rex})
+        const {data, status} = rex
+        console.log({data})
+        result = data.points;
+        statusCode = status;
+      } catch (err) {
+        const e = (err as Error).message;
+        console.log({e})
+        result = "No Address found";
+        statusCode = 404;
+      }
+    } else {
+      try {
+        const {data: d, status: s} = await ServerAxios.get(
+          `get-referral?ref=${address}`
+        );
+        result = d;
+        statusCode = s;
+      } catch (err) {
+        const e = (err as Error).message;
+        console.log({e})
+        result = "Not found";
+        statusCode = 404;
+      }
     }
   } else if (withCode !== null) {
     try {
@@ -74,8 +94,20 @@ export async function GET(request: NextRequest) {
         const {data, status} = await ServerAxios.get(
           `user?address=${address}`
         );
-        console.log({data})
         result = data;
+        statusCode = status;
+      } catch (err) {
+        const e = (err as Error).message;
+        console.log({e})
+        result = "No Address found";
+        statusCode = 404;
+      }
+    } else if (mode === "getPoints") {
+      try {
+        const {data, status} = await ServerAxios.get(
+          `user?address=${address}&points=true`
+        );
+        result = data.points;
         statusCode = status;
       } catch (err) {
         const e = (err as Error).message;
