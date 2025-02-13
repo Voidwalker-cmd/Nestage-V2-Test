@@ -2,7 +2,7 @@
 import {BrowserProvider, Contract, parseUnits} from "ethers";
 import * as T from "@/types";
 import {Axios} from "@/lib/Axios/client";
-import {mAddress, nestageAddress, NETWORK_MODE, nullAddress, refKey, tAddress,} from "@/config";
+import {mAddress, nestageAddress, NETWORK_MODE, nullAddress, tAddress,} from "@/config";
 import BUSD_ABI from "@/web3/NestageNw.json";
 import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import {btnState} from "@/components/molecules/LevelOne";
