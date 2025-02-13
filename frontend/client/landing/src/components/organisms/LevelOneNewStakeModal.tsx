@@ -17,7 +17,7 @@ import {Label} from "@/components/ui/label"
 import {AddIcon} from "@/components/atoms/Icons";
 import {useWeb3Store} from "@/store"
 import {getBUSD, useBNB} from "@/hooks/useBalance"
-import {SITE_MODE} from "@/config"
+import {refKey, SITE_MODE} from "@/config"
 import {SiteUrl} from "@/functions/site";
 import {djs, Formatter, shortenHexString, uuid} from "@/utils";
 import {newStake} from "@/actions/newStake";
@@ -25,6 +25,8 @@ import CopyBtn from "@/components/molecules/CopyBtn";
 import {Loader2} from "lucide-react";
 import {signal} from "@preact/signals-react";
 import {useUserContext} from "@/context/UserContext";
+import {btnState} from "@/components/molecules/LevelOne";
+import {getTempRef} from "@/actions";
 
 export const btnStateModal = signal("Initializing");
 
@@ -42,6 +44,19 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
   const [disabled, setDisabled] = useState(!!1);
   const [amount, setAmount] = useState<string>("");
   const [render, setRender] = useState(!!1);
+  const [refCode, setRefCode] = useState<string>("");
+  
+  useEffect(() => {
+    async function I() {
+      const checkTemp = await getTempRef(address)
+      
+      const ref = localStorage.getItem(refKey) ?? checkTemp.code ?? "";
+      if (ref) {
+        setRefCode(ref)
+      }
+    }
+    I()
+  }, [])
   
   useEffect(() => {
     if (stakers && !stakesLoading) {
@@ -161,7 +176,13 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
               Take advantage of Nestage De-Fi Staking and earn profits.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
+          <div className="py-5">
+            {refCode !== "" ? (
+              <div className="mb-2">
+                <p className="block text-sm font-semibold mb-1 text-center py-2">Upline</p>
+                <div className="w-full px-4 py-2 rounded-lg bg-gray-500 flex justify-center font-medium">{refCode}</div>
+              </div>) : ("")}
+            
             <div className="mb-2 flex items-center justify-start gap-2">
               <label className="block text-sm font-medium mb-1">Wallet address:</label>
               <div className="flex items-center font-medium justify-between px-4 py-2 gap-3">
@@ -171,19 +192,22 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
             </div>
             
             <div className="mb-2 flex items-center justify-start gap-2">
-              <label className="block text-sm font-medium mb-1">Wallet balance:</label>
+              <label className="block text-sm font-medium mb-1">BUSD balance:</label>
+              <div className="flex items-center font-medium justify-between px-4 py-2">
+                <span>
+                  {Formatter(busd, {
+                    type: "d",
+                    decimalOptions: {n: 2, m: 4},
+                  })}
+                </span>
+              </div>
+            </div>
+            
+            <div className="mb-2 flex items-center justify-start gap-2">
+              <label className="block text-sm font-medium mb-1">{symbol} balance:</label>
               <div className="flex items-center font-medium justify-between px-4 py-2">
                             <span className="flex flex-col lg:flex-row justify-center items-center gap-1">
                                 <span>
-                                    <span className="pr-0.5">BUSD</span>
-                                  {Formatter(busd, {
-                                    type: "d",
-                                    decimalOptions: {n: 2, m: 4},
-                                  })}
-                                </span>
-                                <span className="px-0.5 hidden lg:inline"> | </span>
-                                <span>
-                                    <span className="pr-0.5">{symbol}</span>
                                   {Formatter(bal, {
                                     type: "d",
                                     decimalOptions: {n: 4, m: 8},
@@ -200,12 +224,13 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
               <Input
                 onInput={onChange}
                 value={amount}
-                className="w-full !border !border-gray-500"
+                className="w-full"
                 type="number"
                 id="amount"
                 placeholder={`Enter a minimum of ${minAllow} ${"BUSD"}`}
               />
             </div>
+            
           </div>
           <DialogFooter>
             <div className="flex justify-between items-center w-full">

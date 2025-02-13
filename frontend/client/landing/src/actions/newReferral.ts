@@ -3,7 +3,7 @@
 import * as T from "@/types";
 import {contractAddress, getAdminAddress} from "./newStake";
 import {BrowserProvider, Contract, parseUnits} from "ethers";
-import {nestageAddress, NETWORK_MODE, refKey} from "@/config";
+import {nestageAddress, NETWORK_MODE} from "@/config";
 import BUSD_ABI from "@/web3/NestageNw.json";
 import PLAIN_BUSD_ABI from "../web3/PlainBUSD_ABI.json";
 import {btnStateTwo} from "@/components/molecules/LevelTwo";
@@ -153,7 +153,6 @@ export const newReferral = async (form: T.refData) => {
           }
           await Axios.post("referralPay", {adminPay, userPay});
           await Axios.post("tx", {type: "levelTwo", amount, address, level: "two", refBonus: {hasRef: !!0}});
-          localStorage.removeItem(refKey)
         }
         if (place !== 'modal') updateBtnState("Completed")
         if (place === 'modal') updateBtnStateTwo("Completed");
