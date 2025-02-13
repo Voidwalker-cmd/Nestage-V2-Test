@@ -1,7 +1,7 @@
 import * as T from '@/types'
 import {v4 as uuidv4} from 'uuid';
 
-export const defaultRefResponse: T.getSelfRefResponse = {
+export const defaultRefResponse: T.getRefResponse = {
   id: 0,
   address: '',
   code: '',
@@ -15,7 +15,6 @@ export const defaultRefResponse: T.getSelfRefResponse = {
     secondLevel: 0,
     thirdLevel: 0,
   },
-  points: 0
 }
 
 export const demoNoti = (length: number) => Array.from({length}, (_, i) => ({
