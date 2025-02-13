@@ -34,7 +34,23 @@ export async function GET(request: NextRequest) {
         result = "No Address found";
         statusCode = 404;
       }
-    } else {
+    } else if (mode === "temp") {
+      try {
+        const rex = await ServerAxios.get(
+          `user?address=${address}&points=true`
+        );
+        console.log({rex})
+        const {data, status} = rex
+        console.log({data})
+        result = data.points;
+        statusCode = status;
+      } catch (err) {
+        const e = (err as Error).message;
+        console.log({e})
+        result = "No Address found";
+        statusCode = 404;
+      }
+    }else {
       try {
         const {data: d, status: s} = await ServerAxios.get(
           `get-referral?ref=${address}`

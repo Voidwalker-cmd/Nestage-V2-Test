@@ -6,7 +6,7 @@ import useDeviceSize from "@/hooks/useMediaQuery"
 import {bsc, bscTestnet} from "thirdweb/chains";
 import {createThirdwebClient} from "thirdweb";
 
-import {NETWORK_MODE, SITE_MODE} from "@/config";
+import {NETWORK_MODE, refKey, SITE_MODE} from "@/config";
 import {createWallet} from "thirdweb/wallets";
 import {useWeb3Store} from "@/store";
 
@@ -15,6 +15,8 @@ import UserAvatar from "@/components/molecules/UserAvatar";
 import {useAppContext} from "@/context/AppContext";
 import {useAuthContext} from "@/context/AuthContext";
 import {useAuthStore} from "@/store/auth";
+import {saveRef} from "@/functions/saveRef";
+import {saveTempRef} from "@/actions";
 
 
 interface ConnectWalletProps {
@@ -163,6 +165,19 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
               setAddress(address);
               setAddr(address);
               setAuth(!!1);
+              
+              let vRef = ''
+              const params = new URLSearchParams(window.location.search);
+              const ref = params.get("ref") ?? localStorage.getItem(refKey) ?? ""
+              const SaveRef = async (ref: string) => {
+                const {data, status} = await saveRef(ref);
+                if (status === 200) {
+                  localStorage.setItem(refKey, data.code);
+                  vRef = data.code
+                }
+              };
+              if(ref) SaveRef(ref)
+              if(vRef) await saveTempRef(address, vRef)
               // await checkAuth(address);
               // checkLvlOne();
               // await checkLvlTwo(address);
