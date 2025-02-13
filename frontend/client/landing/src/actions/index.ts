@@ -63,6 +63,17 @@ export const getStakersPoints = async (address: string) => {
   }
 }
 
+export const saveTempRef = async (address: string, ref: string) => {
+  try {
+    const {data} = await Axios.post(`referral/temp`, {address, ref})
+    const {status}: {status: number } = data
+    return status === 200 ? "done" : null
+  } catch (e) {
+    console.log({e})
+    return null
+  }
+}
+
 export const getTempRef = async (address: string) => {
   try {
     const {data} = await Axios.get(`referral/temp?address${address}`)
