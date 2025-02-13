@@ -212,7 +212,7 @@ export const newStake = async (form: T.StakingData) => {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
             await Axios.post("tx", {type: "levelOne", amount, address, level: "two", refBonus: {hasRef, address: fstUplineAddress}});
-            if (place !== "modal") updateBtnState("Confirmed")
+            if (place !== "modal") updateBtnState("Confirmed");
             if (place === "modal") updateBtnStateTwo("Confirmed");
           }
           localStorage.removeItem(refKey)
