@@ -25,7 +25,6 @@ import CopyBtn from "@/components/molecules/CopyBtn";
 import {Loader2} from "lucide-react";
 import {signal} from "@preact/signals-react";
 import {useUserContext} from "@/context/UserContext";
-import {btnState} from "@/components/molecules/LevelOne";
 import {getTempRef} from "@/actions";
 
 export const btnStateModal = signal("Initializing");
