@@ -203,7 +203,7 @@ export const newStake = async (form: T.StakingData) => {
           if (Tx.data.result.status === "1") {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
-            await Axios.post("tx", {type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress}});
+            await Axios.post("tx", {type: "levelOne", amount, address, level: "one", refBonus: {hasRef, address: fstUplineAddress}});
             if (place !== "modal") updateBtnState("Confirmed")
             if (place === "modal") updateBtnStateTwo("Confirmed");
           }
@@ -211,7 +211,7 @@ export const newStake = async (form: T.StakingData) => {
           if (Tx.data.status === "1") {
             //   dispatch(setTransactionState({ state: "payed" }));
             //   dispatch(saveStat({ type: "levelOne", amount }));
-            await Axios.post("tx", {type: "levelOne", amount, address, refBonus: {hasRef, address: fstUplineAddress}});
+            await Axios.post("tx", {type: "levelOne", amount, address, level: "two", refBonus: {hasRef, address: fstUplineAddress}});
             if (place !== "modal") updateBtnState("Confirmed")
             if (place === "modal") updateBtnStateTwo("Confirmed");
           }
