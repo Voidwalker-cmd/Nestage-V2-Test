@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   const refCode = request.nextUrl.searchParams.get("ref");
   const mode = request.nextUrl.searchParams.get("mode");
   
-  console.log({mode})
+  console.log({refCode, mode})
   
   // console.log({ withCode, address, refCode });
   
@@ -82,6 +82,7 @@ export async function GET(request: NextRequest) {
       const {data: d, status: s} = await ServerAxios.get(
         `get-ref?ref=${refCode}`
       );
+      console.log({d})
       result = d;
       statusCode = s;
     } catch (err) {
