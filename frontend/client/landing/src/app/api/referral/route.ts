@@ -83,8 +83,8 @@ export async function GET(request: NextRequest) {
       const res = await ServerAxios.get(
         `get-ref?ref=${refCode}`
       );
+      console.log({res})
       const {data: d, status: s} = res
-      console.log({d})
       result = d;
       statusCode = s;
     } catch (err) {
