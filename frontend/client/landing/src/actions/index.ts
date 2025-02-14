@@ -76,7 +76,7 @@ export const saveTempRef = async (address: string, ref: string) => {
 
 export const getTempRef = async (address: string) => {
   try {
-    const {data} = await Axios.get(`referral/temp?address${address}`)
+    const {data} = await Axios.get(`referral/temp?address=${address}`)
     const {status, data: d}: {data: T.tGetTempResponse; status: number } = data
     return status === 200 ? d as T.tGetTempResponse : { code: null, lvlOne: !!0 }
   } catch (e) {
