@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
     }
   } else if (refCode !== null) {
     try {
-      console.log("skdlsdlskd")
+      console.log("skdlsdlskd");
       const res = await ServerAxios.get(
         `get-ref?ref=${refCode}`
       );
