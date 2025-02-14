@@ -55,9 +55,7 @@ export async function PATCH(request: NextRequest) {
   let result, statusCode;
 
   try {
-    const { data: d, status: s } = await ServerAxios.patch(`tempReferral`, {
-      address,
-    });
+    const { data: d, status: s } = await ServerAxios.patch(`tempReferral/${address}`)
     result = d;
     statusCode = s;
   } catch (err) {
