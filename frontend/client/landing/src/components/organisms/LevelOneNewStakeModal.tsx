@@ -42,7 +42,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
   const [bal, setBal] = useState<number | string>(0);
   const [disabled, setDisabled] = useState(!!1);
   const [amount, setAmount] = useState<string>("");
-  const [render, setRender] = useState(!!1);
+  const [render] = useState(!!1);
   const [refCode, setRefCode] = useState<string>("");
   
   useEffect(() => {
