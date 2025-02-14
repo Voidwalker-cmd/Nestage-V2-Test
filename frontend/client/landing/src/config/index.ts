@@ -11,7 +11,7 @@ const nestageAddressMainnet = process.env.NEXT_PUBLIC_MAINNET; //mainnet
 export const nestageAddress = NETWORK_MODE === "mainnet" ? nestageAddressMainnet : nestageAddressTestnet;
 
 // export const API_URL = SITE_MODE === "test" ? TEST_API : SITE_MODE === 'prev' ? 'https://prev-api.nestage.io/api/v1/' : "";
-export const API_URL = SITE_MODE === "test" ? TEST_API : SITE_MODE === 'prev' ? 'https://prev-api.leapcell.app//api/v1/' : "";
+export const API_URL = SITE_MODE === "test" ? TEST_API : SITE_MODE === 'prev' ? 'https://prev-api.leapcell.app/api/v1/' : "";
 
 export const refKey = "f551e9d5-c523-4b10-8ef2-c1d5534ec4eb";
 
