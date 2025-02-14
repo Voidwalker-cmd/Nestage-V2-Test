@@ -174,10 +174,10 @@ const ConnectWallet = ({state, isDashboard = !!0}: ConnectWalletProps) => {
                 if (status === 200) {
                   localStorage.setItem(refKey, data.code);
                   vRef = data.code
+                  if(vRef) await saveTempRef(address, vRef);
                 }
               };
               if(ref) SaveRef(ref)
-              if(vRef) await saveTempRef(address, vRef);
               // await checkAuth(address);
               // checkLvlOne();
               // await checkLvlTwo(address);
