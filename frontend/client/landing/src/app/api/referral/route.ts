@@ -79,9 +79,11 @@ export async function GET(request: NextRequest) {
     }
   } else if (refCode !== null) {
     try {
-      const {data: d, status: s} = await ServerAxios.get(
+      console.log("skdlsdlskd")
+      const res = await ServerAxios.get(
         `get-ref?ref=${refCode}`
       );
+      const {data: d, status: s} = res
       console.log({d})
       result = d;
       statusCode = s;
