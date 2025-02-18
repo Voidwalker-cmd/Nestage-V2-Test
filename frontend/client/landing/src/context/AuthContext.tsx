@@ -93,7 +93,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState(!!0);
   const [allStakers, setAllStakers] = useState<rawStakers[]>([]);
   const [dashboardDisconneted, setDashboardDisconneted] = useState(!!0);
-  
+
   useAutoConnect({
     client,
     onConnect: (w: Wallet) => {
@@ -103,7 +103,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       setAuth(!!1)
     },
   });
-  
+
   // // const setStakers = useAuthStore((state) => state.setStakers)
   const contract = getContract({
     client: client,
@@ -111,14 +111,14 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     chain: NETWORK_MODE === "mainnet" ? bsc : bscTestnet,
   });
   // const stakers: T.stakersData[] = await contract?.call("getAllStakes");
-  
+
   const {data: rawStakers} = useReadContract({
     contract,
     method:
       "function getAllStakes() view returns ((uint256 id, uint256 amount, uint256 startDate, uint256 endDate, uint256 profit, address staker)[])",
     params: [],
   });
-  
+
   useEffect(() => {
     if (!rawStakers) {
       setAllStakers([])
@@ -126,8 +126,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       setAllStakers([...rawStakers])
     }
   }, [rawStakers])
-  
-  
+
+
   const {data: stakeItems, error: stakeError, isLoading: stakesLoading, refetch} = useQuery<T.ParsedStakersData[]>({
     queryKey: ["stakeItmes", savedAddress], // Cache based on user address
     queryFn: () => fetchStakers(allStakers),
@@ -135,7 +135,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     refetchInterval: 30000, // Refetch every 30s
   });
-  
+
   const checkAuth = async (address: string) => {
     setChecking(!!1)
     const res = await getAuth(address)
@@ -171,15 +171,15 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     }
     setChecking(!!0)
   }
-  
+
   const Init = async () => {
     const address = activeAccount?.address || addr || savedAddress
     if (pathName === '/') {
       if (status === 'connected') {
         await checkAuth(address)
-        
+
       } else if (status === 'connecting') {
-      
+
       } else if (status === 'disconnected') {
         setIsLoading(!!1)
         setHold(!!1)
@@ -195,16 +195,19 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
             router.replace(`/`);
           }
         } else {
-        
+
         }
       }
+    } else if (pathName.includes("/campaign")) {
+      setIsLoading(!!1)
+      setHold(!!1)
     } else if (pathName.includes("/user/")) {
       if (status === "connected") {
         if (!address) {
-        
+
         } else {
           if (address !== params.userAddress) {
-            
+
             setIsLoading(!!0)
             router.replace(`/`);
           } else {
@@ -221,21 +224,21 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
         setIsLoading(!!0)
         router.replace(`/`);
       } else {
-      
+
       }
     }
   }
-  
+
   useEffect(() => {
     if (isClient) {
       Init();
     }
   }, [isClient, status])
-  
+
   useEffect(() => {
     setIsClient(!!1);
   }, []);
-  
+
   useEffect(() => {
     if (dashboardDisconneted) {
       setIsLoading(!!0)
@@ -246,8 +249,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
       setDashboardDisconneted(!!0)
     }
   }, [dashboardDisconneted]);
-  
-  
+
+
   if (!isLoading || !isClient || !hold) {
     return <Preloader/>;
   }
@@ -261,7 +264,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     setDashboardDisconneted,
     stakeItems, stakeError, stakesLoading, refetch
   }
-  
+
   return (
     <AuthContext.Provider
       value={

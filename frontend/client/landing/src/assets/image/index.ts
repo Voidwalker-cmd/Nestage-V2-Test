@@ -1,3 +1,4 @@
+import roadMap from "./roadMap.webp";
 import Logo from './logo.webp'
 import HeroImg from "./HeroImg.webp"
 import Whitepaper from "./Whitepaper.webp"
@@ -15,5 +16,6 @@ export const Static = {
   MacBook,
   Question,
   Customer,
-  Loader
+  Loader,
+  roadMap
 };

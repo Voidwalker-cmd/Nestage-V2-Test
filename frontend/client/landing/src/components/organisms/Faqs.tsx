@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Static } from "@/assets/image";
+import {useState} from "react";
+import {Static} from "@/assets/image";
 // import SectionTitle from "../../molecules/Landing/SectionTitle";
-import { faqData } from "@/const/faqData";
+import {faqData} from "@/const/faqData";
 import Image from "next/image";
 
 const Faqs = () => {
@@ -21,11 +21,15 @@ const Faqs = () => {
         <>
             <div className="max-w-full py-20">
                 <div className="mx-2 lg:mx-20">
-                    {/* <SectionTitle
-                        heading="FAQs"
-                        subHeading="See frequently asked questions."
-                        className={"text-white"}
-                    /> */}
+                    {/*<SectionTitle*/}
+                    {/*    heading="FAQs"*/}
+                    {/*    subHeading="See frequently asked questions."*/}
+                    {/*    className={"text-white"}*/}
+                    {/*/>*/}
+                    <h2 data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" data-aos-offset="300"
+                        className="font-primary text-xl font-bold text-white md:text-3xl w-full flex justify-center pb-5">
+                        FAQs
+                    </h2>
                     <div className="py-5 px-2 mt-3">
                         <div className="flex flex-col lg:flex-row justify-center items-center gap-3 lg:gap-7">
                             <div className="flex gap-[7px] w-full lg:w-1/2 mb-5">
@@ -56,11 +60,12 @@ const Faqs = () => {
                                     {data.map((faq, index) => (
                                         <details
                                             key={index}
-                                            className={`group ${activeIndex === index ? "open" : ""}`}
+                                            className={`group ${activeIndex === index ? "open" : "close"}`}
                                             open={activeIndex === index}
                                             onClick={() => handleToggle(index)}
                                         >
-                                            <summary className="flex cursor-pointer items-center justify-between gap-1.5 rounded-lg bg-[#2d6a4f] p-4 text-white">
+                                            <summary
+                                                className="flex cursor-pointer items-center justify-between gap-1.5 rounded-lg bg-[#2d6a4f] p-4 text-white">
                                                 <h2 className="font-medium">{faq.question}</h2>
                                                 <svg
                                                     className="size-5 shrink-0 transition duration-300 group-open:-rotate-180"
