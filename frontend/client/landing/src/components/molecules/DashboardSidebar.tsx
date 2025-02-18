@@ -1,6 +1,6 @@
 "use client";
 
-import {BookOpenText, ChartCandlestick, Home, Megaphone, Settings} from "lucide-react"
+import {BookOpenText, ListTodo, Home, Megaphone, Settings} from "lucide-react"
 
 import {
     Sidebar,
@@ -25,17 +25,17 @@ import {Points} from "@/components/molecules/Points";
 const items = [
     {
         title: "Home",
-        url: "#",
+        url: "/",
         icon: Home,
     },
     {
-        title: "Marketing Rules",
+        title: "Tasks",
         url: "#",
-        icon: ChartCandlestick,
+        icon: ListTodo,
     },
     {
         title: "Campaign",
-        url: "#",
+        url: "/campaign",
         icon: Megaphone,
     },
     {
@@ -56,11 +56,12 @@ export function AppSidebar() {
         isMobile,
     } = useSidebar()
     return (
-        <Sidebar collapsible="icon" >
+        <Sidebar collapsible="icon">
             <SidebarHeader>
                 <div className="flex items-center gap-1 lg:gap-2">
-                    <Image src={Static.Logo} alt="logo" width={isMobile ? 65 : 85} height={isMobile ? 65 : 85} />
-                    {open || isMobile ? (<h2 className="darkModeText capitalize text-black tracking-wide lg:tracking-wider font-bold lg:font-bold text-xl lg:text-2xl">nestage</h2>) : ("")}
+                    <Image src={Static.Logo} alt="logo" width={isMobile ? 65 : 85} height={isMobile ? 65 : 85}/>
+                    {open || isMobile ? (
+                        <h2 className="darkModeText capitalize text-black tracking-wide lg:tracking-wider font-bold lg:font-bold text-xl lg:text-2xl">nestage</h2>) : ("")}
                 </div>
             </SidebarHeader>
             <SidebarContent>
@@ -78,10 +79,15 @@ export function AppSidebar() {
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon className="!w-5 !h-5" />
-                                            <span className="text-lg">{item.title}</span>
-                                        </a>
+                                        {item.title === 'Doc' ? (
+                                                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                                                    <item.icon className="!w-5 !h-5"/>
+                                                    <span className="text-lg">{item.title}</span>
+                                                </a>)
+                                            : (<a href={item.url}>
+                                                <item.icon className="!w-5 !h-5"/>
+                                                <span className="text-lg">{item.title}</span>
+                                            </a>)}
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -90,15 +96,19 @@ export function AppSidebar() {
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-            <SidebarMenu>
-                <SidebarMenuItem className={`flex ${open || isMobile ? "flex-row" : "flex-col"} justify-center items-center w-full transition-all`}>
-                    <div className={`${open || isMobile ? "px-4 space-x-5" : "space-y-3"} transition-all py-2`}>
-                        <SocialIcon url="" network="telegram" className={`${open || isMobile ? "!w-10 !h-10" : "!w-7 !h-7"} transition-all`} />
-                        <SocialIcon url="" network="x" className={`${open || isMobile ? "!w-10 !h-10" : "!w-7 !h-7"} transition-all`} />
-                        <SocialIcon url="" network="youtube" className={`${open || isMobile ? "!w-10 !h-10" : "!w-7 !h-7"} transition-all`} />
-                    </div>
-                </SidebarMenuItem>
-            </SidebarMenu>
+                <SidebarMenu>
+                    <SidebarMenuItem
+                        className={`flex ${open || isMobile ? "flex-row" : "flex-col"} justify-center items-center w-full transition-all`}>
+                        <div className={`${open || isMobile ? "px-4 space-x-5" : "space-y-3"} transition-all py-2`}>
+                            <SocialIcon url="" network="telegram"
+                                        className={`${open || isMobile ? "!w-10 !h-10" : "!w-7 !h-7"} transition-all`}/>
+                            <SocialIcon url="" network="x"
+                                        className={`${open || isMobile ? "!w-10 !h-10" : "!w-7 !h-7"} transition-all`}/>
+                            <SocialIcon url="" network="youtube"
+                                        className={`${open || isMobile ? "!w-10 !h-10" : "!w-7 !h-7"} transition-all`}/>
+                        </div>
+                    </SidebarMenuItem>
+                </SidebarMenu>
             </SidebarFooter>
         </Sidebar>
     )

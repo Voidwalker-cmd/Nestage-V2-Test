@@ -33,30 +33,31 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
   const address = useWeb3Store((state) => state.address)
   const {balance: bnb, symbol} = useBNB(address);
   const {stakers, stakesLoading} = useUserContext()
-  
+
   const [busd, setBusd] = useState<number | string>(0);
   const [hasErr, setHasErr] = useState<boolean>(!!0)
   const [err, setErr] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(!!0)
-  
+
   const [bal, setBal] = useState<number | string>(0);
   const [disabled, setDisabled] = useState(!!1);
   const [amount, setAmount] = useState<string>("");
   const [render] = useState(!!1);
   const [refCode, setRefCode] = useState<string>("");
-  
+
   useEffect(() => {
     async function I() {
       const checkTemp = await getTempRef(address)
-      
+
       const ref = localStorage.getItem(refKey) ?? checkTemp.code ?? "";
       if (ref) {
         setRefCode(ref)
       }
     }
+
     I()
   }, [])
-  
+
   useEffect(() => {
     if (stakers && !stakesLoading) {
       if (!stakers.length) {
@@ -64,7 +65,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
       }
     }
   }, [stakers]);
-  
+
   useEffect(() => {
     const fetchBusd = async () => {
       const {balance} = await getBUSD(address);
@@ -72,15 +73,15 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
     };
     fetchBusd();
   }, [address]);
-  
+
   const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 2 : 10;
-  
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex = /^[1-9][0-9]*$/;
     let val = e.target.value;
     if (!regex.test(val)) val = ""
     setAmount(val);
-    
+
     // Disable button if input amount is less than the balance
     if (SiteUrl.includes("testing") || SiteUrl.includes(":4110")) {
       if (val === "") {
@@ -92,7 +93,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
       setDisabled(Number(val) > Number(busd) || Number(val) < minAllow || val === "");
     }
   };
-  
+
   const startStake = async () => {
     setHasErr(!!0);
     if (!SiteUrl.includes("testing") || !SiteUrl.includes(":4110")) {
@@ -103,10 +104,10 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
         return;
       }
     }
-    
+
     let p: string | number = Number(amount) * 0.3;
     p = String(Number(amount) + p);
-    
+
     const a = djs().valueOf();
     const b = djs()
       .add(SiteUrl.includes("testing") || SiteUrl.includes(":4110") ? 1 : 25, "days")
@@ -123,7 +124,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
     };
     setLoading(!!1)
     const res = await newStake(send)
-    
+
     // console.log({res})
     if (res.status === 'error') {
       setLoading(!!0)
@@ -138,14 +139,14 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
       window.location.reload()
     }
   }
-  
+
   useEffect(() => {
     if (bnb) {
       // setBal(100);
       setBal(bnb);
     }
   }, [bnb]);
-  
+
   const ResetStates = () => {
     setBusd(0);
     setHasErr(!!0)
@@ -155,13 +156,14 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
     setDisabled(!!1);
     setAmount("");
   }
-  
+
   return (
     <>{render ? (
       <Dialog>
         <DialogTrigger asChild>
           {size == "icon" ? (
-            <Button size="icon" variant="outline" className={"setBtn"}>
+            <Button size="icon" variant="outline" className={"setBtn group"}>
+              <p className="px-2 font-semibold text-lg group">New Stake</p>
               <AddIcon className='w-6 h-6'/>
             </Button>
           ) : (
@@ -181,7 +183,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
                 <p className="block text-sm font-semibold mb-1 text-center py-2">Upline</p>
                 <div className="w-full px-4 py-2 rounded-lg bg-gray-500 flex justify-center font-medium">{refCode}</div>
               </div>) : ("")}
-            
+
             <div className="mb-2 flex items-center justify-start gap-2">
               <label className="block text-sm font-medium mb-1">Wallet address:</label>
               <div className="flex items-center font-medium justify-between px-4 py-2 gap-3">
@@ -189,7 +191,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
                 <CopyBtn value={address}/>
               </div>
             </div>
-            
+
             <div className="mb-2 flex items-center justify-start gap-2">
               <label className="block text-sm font-medium mb-1">BUSD balance:</label>
               <div className="flex items-center font-medium justify-between px-4 py-2">
@@ -201,7 +203,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
                 </span>
               </div>
             </div>
-            
+
             <div className="mb-2 flex items-center justify-start gap-2">
               <label className="block text-sm font-medium mb-1">{symbol} balance:</label>
               <div className="flex items-center font-medium justify-between px-4 py-2">
@@ -215,7 +217,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
                             </span>
               </div>
             </div>
-            
+
             <div className="mb-2 w-full">
               <Label htmlFor="amount" className="block text-sm font-medium mb-1">
                 Enter amount: {hasErr && <span className="px-3 text-sm text-red-500 italic">{err}</span>}
@@ -229,7 +231,7 @@ const LevelOneNewStakeModal = ({size}: { size: string }) => {
                 placeholder={`Enter a minimum of ${minAllow} ${"BUSD"}`}
               />
             </div>
-            
+
           </div>
           <DialogFooter>
             <div className="flex justify-between items-center w-full">
