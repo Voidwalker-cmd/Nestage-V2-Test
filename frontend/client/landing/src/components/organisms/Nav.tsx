@@ -38,7 +38,7 @@ const Nav = () => {
           <SheetTrigger>
             <MenuIcon className="text-white inline-block lg:hidden ml-3 w-7 h-7"/>
           </SheetTrigger>
-          <SheetContent className="w-[2000px]">
+          <SheetContent className="w-[200px]">
             <SheetHeader>
               <SheetTitle className="align-left block">Menu</SheetTitle>
               <SheetDescription className="text-black items-center gap-5 justify-center flex flex-col mt-3">
