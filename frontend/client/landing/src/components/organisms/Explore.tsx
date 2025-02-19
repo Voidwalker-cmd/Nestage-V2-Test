@@ -27,8 +27,8 @@ const Explore = () => {
           </div>
           <Button
             data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" data-aos-offset="100"
-            className="hover:bg-[#EF9414] hover:text-white bg-[#EF9414] text-white rounded-lg border border-gray-500 py-2 text-semibold">Learn
-            More</Button>
+            className="hover:bg-[#EF9414] hover:text-white bg-[#EF9414] text-white rounded-lg border border-gray-500 py-2 text-semibold">
+            <a href="/docs/tokenomics.pdf" target="_blank" rel="noopener noreferrer">Learn More</a></Button>
         </div>
       </div>
     </div>

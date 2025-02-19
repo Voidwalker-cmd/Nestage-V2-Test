@@ -15,7 +15,7 @@ import {SiteUrl} from "@/functions/site";
 import {signal} from "@preact/signals-react";
 import {Loader2} from "lucide-react";
 import {useRouter} from 'next/navigation';
-import CopyBtn from "@/components/molecules/CopyBtn";
+import DisconnectWallet from "@/components/molecules/DisconnectWallet";
 
 export const btnState = signal("Initializing");
 
@@ -27,20 +27,20 @@ const LevelOne = ({setStage}: T.ModalProps) => {
   const [hasErr, setHasErr] = useState<boolean>(!!0)
   const [err, setErr] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(!!0)
-  
+
   const [bal, setBal] = useState<number | string>(0);
   const [disabled, setDisabled] = useState(!!1);
   const [amount, setAmount] = useState<string>("");
   const [refCode, setRefCode] = useState<string>("");
-  
+
   useEffect(() => {
     const ref = localStorage.getItem(refKey);
     if (ref) {
       setRefCode(ref)
     }
   }, [])
-  
-  
+
+
   useEffect(() => {
     const fetchBusd = async () => {
       const {balance} = await getBUSD(address);
@@ -48,15 +48,15 @@ const LevelOne = ({setStage}: T.ModalProps) => {
     };
     fetchBusd();
   }, [address]);
-  
+
   const minAllow = SITE_MODE === 'test' || SITE_MODE === 'prev' ? 2 : 10;
-  
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex = /^[1-9][0-9]*$/;
     let val = e.target.value;
     if (!regex.test(val)) val = ""
     setAmount(val);
-    
+
     // Disable button if input amount is less than the balance
     if (SiteUrl.includes("testing") || SiteUrl.includes(":4110")) {
       if (val === "") {
@@ -68,7 +68,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
       setDisabled(Number(val) > Number(busd) || Number(val) < minAllow || val === "");
     }
   };
-  
+
   const startStake = async () => {
     setHasErr(!!0);
     if (!SiteUrl.includes("testing") || !SiteUrl.includes(":4110")) {
@@ -79,10 +79,10 @@ const LevelOne = ({setStage}: T.ModalProps) => {
         return;
       }
     }
-    
+
     let p: string | number = Number(amount) * 0.3;
     p = String(Number(amount) + p);
-    
+
     const a = djs().valueOf();
     const b = djs()
       .add(SiteUrl.includes("testing") || SiteUrl.includes(":4110") ? 1 : 25, "days")
@@ -99,7 +99,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
     };
     setLoading(!!1)
     const res = await newStake(send)
-    
+
     // console.log({res})
     if (res.status === 'error') {
       setLoading(!!0)
@@ -114,36 +114,36 @@ const LevelOne = ({setStage}: T.ModalProps) => {
       router.push(`/user/${address}`)
     }
   }
-  
+
   useEffect(() => {
     if (bnb) {
       // setBal(100);
       setBal(bnb);
     }
   }, [bnb]);
-  
-  
+
+
   return (
     <div className="flex flex-col md:flex-row items-center justify-center p-6 space-y-6 md:space-y-0 md:space-x-6">
       {/* Left Section */}
       <div className="w-full md:w-2/5 p-6 rounded-lg shadow-lg text-white">
         <h1 className="text-xl font-bold mb-4">Level 1 De-Fi Staking.</h1>
-        
+
         <div className="py-5">
           {refCode !== "" ? (
             <div className="mb-2">
               <p className="block text-sm font-semibold mb-1 text-center py-2">Upline</p>
               <div className="w-full px-4 py-2 rounded-lg bg-gray-500 flex justify-center font-medium">{refCode}</div>
             </div>) : ("")}
-          
+
           <div className="mb-2 flex items-center justify-start gap-2">
             <label className="block text-sm font-medium mb-1">Wallet address:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2 gap-3">
               <span>{shortenHexString(address || "")}</span>
-              <CopyBtn value={address}/>
+              <DisconnectWallet/>
             </div>
           </div>
-          
+
           <div className="mb-2 flex items-center justify-start gap-2">
             <label className="block text-sm font-medium mb-1">BUSD balance:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2">
@@ -155,7 +155,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
                 </span>
             </div>
           </div>
-          
+
           <div className="mb-2 flex items-center justify-start gap-2">
             <label className="block text-sm font-medium mb-1">{symbol} balance:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2">
@@ -169,7 +169,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
                             </span>
             </div>
           </div>
-          
+
           <div className="mb-2 w-full">
             <Label htmlFor="amount" className="block text-sm font-medium mb-1">
               Enter amount: {hasErr && <span className="px-3 text-sm text-red-500 italic">{err}</span>}
@@ -183,7 +183,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
               placeholder={`Enter a minimum of ${minAllow} ${"BUSD"}`}
             />
           </div>
-          
+
           <div className="flex items-center justify-between py-5">
             <Button
               onClick={() => setStage(0)}
@@ -211,7 +211,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
           </div>
         </div>
       </div>
-      
+
       {/* Right Section */}
       <RightSide/>
     </div>
