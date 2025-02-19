@@ -12,7 +12,7 @@ import {signal} from "@preact/signals-react";
 import {Loader2} from "lucide-react";
 import {useRouter} from 'next/navigation';
 import {newReferral} from "@/actions/newReferral";
-import CopyBtn from "@/components/molecules/CopyBtn";
+import DisconnectWallet from "@/components/molecules/DisconnectWallet";
 
 export const btnStateTwo = signal("Initializing");
 
@@ -139,7 +139,7 @@ const LevelOne = ({setStage}: T.ModalProps) => {
             <label className="block text-sm font-medium mb-1">Wallet address:</label>
             <div className="flex items-center font-medium justify-between px-4 py-2 gap-3">
               <span>{shortenHexString(address || "")}</span>
-              <CopyBtn value={address}/>
+              <DisconnectWallet />
             </div>
           </div>
           
