@@ -13,7 +13,7 @@ export interface SocialIconProps extends IconProps {
 export interface web3Store {
   address: string;
   balance: string;
-  symbol: string;
+  symbol: string;ParsedStakersData
   // contract: ethers.Contract | unknown;
   // connect: () => void;
   // status: string;
